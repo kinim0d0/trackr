@@ -1,0 +1,36 @@
+{
+  "name": "trackr",
+  "version": "1.0.0",
+  "description": "A simple and elegant time tracker",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kinim0d0/trackr.git"
+  },
+  "author": "Dominik Gyecsek",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kinim0d0/trackr/issues"
+  },
+  "homepage": "https://github.com/kinim0d0/trackr#readme",
+  "devDependencies": {
+    "gulp-concat": "^2.6.1",
+    "gulp-es6-transpiler": "^1.0.1",
+    "gulp-sass": "^3.1.0",
+    "gulp-watch": "^4.3.11"
+  },
+  "dependencies": {
+    "bower": "^1.8.2",
+    "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-uglify": "^3.0.0", 
+    "bcrypt": "^1.0.3",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mongoose": "^4.13.2",
+    "socket.io": "^1.7.3"
+  }
+}

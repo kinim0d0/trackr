@@ -1,0 +1,22 @@
+{
+  "name": "trackr",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "Dominik Gyecsek <dominik.gyecsek@gmail.com>"
+  ],
+  "license": "",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1",
+    "jquery-ui": "^1.12.1",
+    "simplePagination.js": "flaviusmatis/simplePagination.js",
+    "jquery-tag-editor": "Pixabay/jQuery-tagEditor#^1.0.20"
+  }
+}
