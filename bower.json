@@ -13,7 +13,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "4.0.0-alpha.6",
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "simplePagination.js": "flaviusmatis/simplePagination.js",

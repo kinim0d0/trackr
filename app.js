@@ -37,7 +37,9 @@ db.once('open', function() {
 app.use('/api', api);*/
 
 app.get("/dashboard*", function(req, res) {
-	res.render('dashboard')
+	res.render('dashboard', {
+    section: 'dashboard'
+  })
 })
 
 app.get("*", function(req, res) {
