@@ -1,0 +1,50 @@
+@import '../colors.scss';
+
+.tracker-container {
+	
+	.tracker {
+		margin: 0em 0em 2em 0em;
+
+		.inner {
+			width: 200px;
+			height: 200px;
+			border-radius: 100%;
+			cursor: pointer;
+			margin: auto;
+		}
+
+		&[data-color='red'] {
+
+			.inner {
+				background-color: $red;
+			}
+
+		}
+
+		&[data-color='yellow'] {
+
+			.inner {
+				background-color: $yellow;
+			}
+
+		}
+
+		&[data-color='green'] {
+
+			.inner {
+				background-color: $green;
+			}
+
+		}
+
+		&[data-color='blue'] {
+
+			.inner {
+				background-color: $blue;
+			}
+
+		}
+
+	}
+
+}
