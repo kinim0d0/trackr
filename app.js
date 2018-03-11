@@ -43,7 +43,9 @@ app.get("/dashboard*", function(req, res) {
 })
 
 app.get("*", function(req, res) {
-  res.render('index')
+  res.render('index', {
+    section: 'home'
+  })
 })
 
 app.listen(port, function(err) {

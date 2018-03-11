@@ -23,5 +23,9 @@ class App {
 
 }
 
-var app = new App("LOCAL");
+var app;
 //var app = new App("DEV");
+
+$(document).ready(function() {
+    app = new App("LOCAL");
+})
