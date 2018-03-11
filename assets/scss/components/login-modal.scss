@@ -13,9 +13,9 @@
 		box-shadow: 0 15px 40px rgba(0,0,0,.5);
 		display: inline-block;
 		position: absolute;
-		top: 50%;
+		top: 16%;
 		left: 50%;
-		transform: translate(-50%, -100%);
+		transform: translate(-50%, 0);
 
 		h2 {
 			font-weight: 700;
@@ -23,7 +23,7 @@
 			margin-bottom: 1em;
 		}
 		
-		form {
+		.formbox {
 			padding: 40px;
 			background: #fff;
 
@@ -38,7 +38,7 @@
 
 			input {
 				width: 100%;
-				margin-bottom: 20px;
+				margin-bottom: 2px;
 			}
 
 			input[type="text"], 

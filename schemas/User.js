@@ -27,14 +27,9 @@ userSchema.pre('save', function(next) {
     var user = this;
 
     if (this.isNew) {
-
-    	var now = new Date();
-		var renewsAt = now.setMonth(now.getMonth()+1);
-
+    	
 		bcrypt.hash(user.password, SALT_WORK_FACTOR, function(err, hash) {
 			if (err) return next(err);
-			user.subscription.renewsAt = renewsAt;
-			user.bandwidth.resetsAt = renewsAt;
 			user.password = hash;
 			next();
 		});
@@ -60,8 +55,9 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 };
 
 userSchema.statics.isUserExists = function(email, cb) {
-	var User = require("../schemas/user"); 
-	User.find({ email: email }, cb);
+
+	this.find({ email: email }, cb);
+
 };
 
 var userModel = mongoose.model("User", userSchema);

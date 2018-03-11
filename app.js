@@ -37,6 +37,16 @@ db.once('open', function() {
 /*var api = require("./routes/api");
 app.use('/api', api);*/
 
+app.use(function(req, res, next) {
+
+  /*app.locals.user = null;
+
+  console.log(user);*/
+
+  next();
+
+})
+
 app.use(session({
   secret: 'trackr',
   resave: false,
@@ -59,7 +69,6 @@ db.once('open', function() {
 app.get("/dashboard*", function(req, res) {
 
   //console.log("Session ?");
-  //console.log(req.session);
 
   if (req.session.userId == undefined) {
 
@@ -68,7 +77,8 @@ app.get("/dashboard*", function(req, res) {
   } else {
 
     res.render('dashboard', {
-      section: 'dashboard'
+      section: 'dashboard',
+      session: req.session
     })
 
   }
@@ -77,7 +87,8 @@ app.get("/dashboard*", function(req, res) {
 
 app.get("/", function(req, res) {
   res.render('index', {
-    section: 'home'
+    section: 'home',
+    session: req.session
   })
 })
 

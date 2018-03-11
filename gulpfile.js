@@ -52,7 +52,8 @@ gulp.task('external-styles', function () {
 		'bower_components/bootstrap/dist/css/bootstrap.min.css',
 		'bower_components/jquery-tag-editor/jquery.tag-editor.css',
 		'bower_components/simplePagination.js/simplePagination.css',
-		'node_modules/froala-design-blocks/dist/css/froala_blocks.css'
+		'node_modules/froala-design-blocks/dist/css/froala_blocks.css',
+		'assets/css/fontawesome_all.css'
 	])
 	.pipe(concat("externals.min.css"))
 	.pipe(gulp.dest('assets/public/css'));
