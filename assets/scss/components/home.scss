@@ -1,0 +1,37 @@
+body[data-page="home"] {
+	
+	section.intro {
+		background-image: linear-gradient(135deg,#172a74,#21a9af);
+
+		.app-logo {
+			margin-top: 5em;
+		}
+
+		h1, p{
+			color: white;
+		}
+
+		h1 {
+			margin-top: 0;
+		}
+
+		.row {
+			width: 100%;
+		}
+
+	}
+
+	section.features {
+
+	}
+
+	section.cta {
+		background-image: linear-gradient(135deg,#172a74,#21a9af);
+
+		p {
+			color: white;
+		}
+
+	}
+
+}

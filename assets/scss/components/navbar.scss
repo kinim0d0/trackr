@@ -4,3 +4,18 @@ nav.navbar {
 	padding: 24px 12px;
 	background-color: $whitesmoke;
 }
+
+body[data-page="home"] {
+
+	nav.navbar {
+		position: absolute;
+		z-index: 10;
+		width: 100%;
+		background: transparent;
+
+		a {
+			color: white !important;
+		}
+
+	}
+}

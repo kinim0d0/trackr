@@ -4,6 +4,7 @@ var nodemon = require("gulp-nodemon");
 var mongoose = require("mongoose");
 var bodyParser = require('body-parser');
 var path = require ('path');
+var session = require('express-session')
 
 process.env.ENV = "DEV";
 
@@ -25,7 +26,7 @@ mongoose.connect(dbLink, {
 })
 
 define("DB_LINK", "mongodb://localhost/diary");
-define("DB_LINK_PROD", "mongodb://kinim0d:Nincsen00@ds245687.mlab.com:45687/doentry");
+
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -36,17 +37,52 @@ db.once('open', function() {
 /*var api = require("./routes/api");
 app.use('/api', api);*/
 
-app.get("/dashboard*", function(req, res) {
-	res.render('dashboard', {
-    section: 'dashboard'
-  })
+app.use(session({
+  secret: 'trackr',
+  resave: false,
+  saveUninitialized: true
+}))
+
+var DB_LINK = "mongodb://localhost/trackr";
+//define("DB_LINK_PROD", "mongodb://kinim0d:Nincsen00@ds245687.mlab.com:45687/doentry");
+
+mongoose.connect(DB_LINK, {
+  config: { autoIndex: true } 
 })
 
-app.get("*", function(req, res) {
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("CONNECTED TO DB");
+})
+
+app.get("/dashboard*", function(req, res) {
+
+  //console.log("Session ?");
+  //console.log(req.session);
+
+  if (req.session.userId == undefined) {
+
+    res.redirect("/");
+
+  } else {
+
+    res.render('dashboard', {
+      section: 'dashboard'
+    })
+
+  }
+
+})
+
+app.get("/", function(req, res) {
   res.render('index', {
     section: 'home'
   })
 })
+
+var UserController = require('./controller/User');
+app.use('/user', UserController);
 
 app.listen(port, function(err) {
 	if (err) console.log(err);

@@ -51,7 +51,8 @@ gulp.task('external-styles', function () {
 	return gulp.src([
 		'bower_components/bootstrap/dist/css/bootstrap.min.css',
 		'bower_components/jquery-tag-editor/jquery.tag-editor.css',
-		'bower_components/simplePagination.js/simplePagination.css'
+		'bower_components/simplePagination.js/simplePagination.css',
+		'node_modules/froala-design-blocks/dist/css/froala_blocks.css'
 	])
 	.pipe(concat("externals.min.css"))
 	.pipe(gulp.dest('assets/public/css'));
