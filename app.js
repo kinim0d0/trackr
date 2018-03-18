@@ -54,7 +54,7 @@ app.use(session({
 }))
 
 var DB_LINK = "mongodb://localhost/trackr";
-//define("DB_LINK_PROD", "mongodb://kinim0d:Nincsen00@ds245687.mlab.com:45687/doentry");
+//var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
 
 mongoose.connect(DB_LINK, {
   config: { autoIndex: true } 
