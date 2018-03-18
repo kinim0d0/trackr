@@ -3,8 +3,25 @@ body[data-page='dashboard'] {
 	section {
 		margin: 1em 0em 4em 0em;
 
-		h1 {
-			margin: 0 0 1em 0;
+		.header {
+
+			h1 {
+				margin: 0 0 1em 0;
+				font-weight: 300;
+				display: inline-block;
+			}
+
+			button {
+				display: inline-block;
+				border: none;
+				background: transparent;
+				font-weight: 700;
+				font-size: 1.1em;
+				margin-left: 12px;
+				float: right;
+				margin-top: 18px;
+			}
+
 		}
 
 	}	

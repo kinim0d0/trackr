@@ -28,4 +28,31 @@ var app;
 
 $(document).ready(function() {
     app = new App("LOCAL");
+    $('#daterange').daterangepicker();
 })
+
+// Triggers actions on input enter
+$("html").on("keyup", "input", function (e) {
+
+    if ( (e.keyCode == 13) && ($(this).hasClass("on-enter")) ) {
+        
+        var action = $(this).attr("data-enter");
+
+        switch(action) {
+
+            case "trigger":
+                console.log("trigger");
+                var $element = $(this).attr("data-trigger");
+                $element = $($element).first();
+                $element.trigger("click");
+                break;
+
+            default:
+                console.log("Unkown action");
+                break;
+
+        }
+
+    }
+
+});

@@ -1,0 +1,71 @@
+.date-range {
+	cursor: pointer;
+	position: relative;
+
+	div {
+		display: inline-block;
+		font-family: 'Quicksand';
+		width: 250px;
+
+		span {
+			display: inline-block;
+
+			&.day {
+				font-weight: 500;
+				font-size: 4em;
+				text-align: center;
+				width: 70px;
+				line-height: 1em;
+			}
+
+			&.weekday {
+				font-size: 1.6em;
+				font-weight: 400;
+				margin-left: 6px;
+			}
+
+			&.month {
+				font-size: 1.2em;
+				font-weight: 700;
+				display: block;
+				text-align: center;
+				width: 70px;
+				text-transform: uppercase
+			}
+
+			&.year {
+				font-size: 1.2em;
+				font-weight: 400;
+				display: block;
+				text-align: center;
+				width: 70px;
+				display: none;
+			}
+
+		}
+	
+	}
+
+	input#daterange {
+		opacity: 0;
+		left: 0px;
+		position: absolute;
+		bottom: -20px;
+	}
+
+	svg {
+		position: absolute;
+		font-size: 1.6em;
+		top: 30px;
+
+		&.prev-day {
+			left: -30px;
+		}
+
+		&.next-day {
+			right: 30px;
+		}
+
+	}
+
+}

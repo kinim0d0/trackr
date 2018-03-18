@@ -17,6 +17,8 @@
     "jquery": "^3.2.1",
     "jquery-ui": "^1.12.1",
     "simplePagination.js": "flaviusmatis/simplePagination.js",
-    "jquery-tag-editor": "Pixabay/jQuery-tagEditor#^1.0.20"
+    "jquery-tag-editor": "Pixabay/jQuery-tagEditor#^1.0.20",
+    "bootstrap-daterangepicker": "^2.1.27",
+    "moment": "^2.21.0"
   }
 }

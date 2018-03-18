@@ -34,14 +34,15 @@ gulp.task('default', ['styles', 'scripts', 'external-scripts', 'external-styles'
 })
 
 gulp.task('external-scripts', function () {
-	return gulp.src([
+	return gulp.src([	
 		'bower_components/jquery/dist/jquery.min.js',
 		'bower_components/jquery-ui/jquery-ui.js',
 		'bower_components/bootstrap/dist/js/bootstrap.min.js',
-		'bower_components/bootstrap-datetimepicker.js',
 		'bower_components/caret/jquery.caret.js',
 		'bower_components/simplePagination.js/jquery.simplePagination.js',
-		'bower_components/socket.io-1.2.0.js'
+		'bower_components/socket.io-1.2.0.js',
+		//'bower_components/moment/min/moment.min.js',
+		//'bower_components/bootstrap-daterangepicker/daterangepicker.js'
 	])
 	.pipe(concat("externals.min.js"))
 	.pipe(gulp.dest('assets/public/js'));
@@ -53,7 +54,8 @@ gulp.task('external-styles', function () {
 		'bower_components/jquery-tag-editor/jquery.tag-editor.css',
 		'bower_components/simplePagination.js/simplePagination.css',
 		'node_modules/froala-design-blocks/dist/css/froala_blocks.css',
-		'assets/css/fontawesome_all.css'
+		'assets/css/fontawesome_all.css',
+		//'bower_components/bootstrap-daterangepicker/daterangepicker.css',
 	])
 	.pipe(concat("externals.min.css"))
 	.pipe(gulp.dest('assets/public/css'));

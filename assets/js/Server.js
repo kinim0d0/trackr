@@ -86,6 +86,8 @@ $("html").on("click touch", ".login-btn", function() {
 
 		success = data["success"];
 
+		$(".password-group").addClass("hide");
+
 		if (success == true) {
 
 			if (data.data.view == "loggedIn") {
@@ -95,6 +97,8 @@ $("html").on("click touch", ".login-btn", function() {
 			} if (data.data.view == "login") {
 				$(".password-group:not(.password-again)").removeClass("hide");
 			}
+
+			$("#password").focus();
 
 		} else {
 
