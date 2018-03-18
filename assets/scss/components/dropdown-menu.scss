@@ -1,0 +1,58 @@
+@import '../colors';
+
+.dropdown-menu {
+	padding: 12px;
+	width: 250px;
+
+	h2 {
+		margin-bottom: 0.6em;
+	}
+
+	.form-group {
+
+		input {
+			background-color: transparent;
+			width: 100%;
+			border: none;
+			border-bottom: 1px solid #333;
+		}
+
+		label {
+			margin-bottom: 0.2em;
+		}
+
+		.color-picker {
+
+			.color {
+				display: inline-block;
+				width: 44px;
+				height: 44px;
+				margin: 4px;
+				cursor: pointer;
+
+				&[data-color='red'] { background-color: $red; }
+				&[data-color='pink'] { background-color: $pink; }
+				&[data-color='yellow'] { background-color: $yellow; }
+				&[data-color='green'] { background-color: $green; }
+				&[data-color='orange'] { background-color: $orange; }
+				&[data-color='blue'] { background-color: $blue; }
+				&[data-color='purple'] { background-color: $purple; }
+				&[data-color='grey'] { background-color: $grey; }
+
+				&.selected {
+					border: 5px solid rgba(0,0,0,0.3);
+					cursor: unset;
+				}
+
+			}
+
+		}
+
+	}
+
+	.submit-btn {
+		border: 2px solid #333 !important;
+		color: #333 !important;
+	}
+
+}

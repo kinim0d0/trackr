@@ -6,6 +6,7 @@ var trackerSchema = Schema({
 	localId: {type: String, required: true},
 	name: {type: String},
 	days: {type: Schema.Type.Mixed},
+	color: {type: Number}
 	/*
 		daysSinceEpoch: {
 			description,

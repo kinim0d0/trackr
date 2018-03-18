@@ -4,16 +4,19 @@ body[data-page='dashboard'] {
 		margin: 1em 0em 4em 0em;
 
 		.header {
+			font-family: 'Quicksand', sans-serif;
 
 			h1 {
 				margin: 0 0 2em 0;
-				font-weight: 300;
+				font-weight: 700;
 				display: inline-block;
+				font-family: 'Quicksand', sans-serif;
 			}
 
 			button {
 				display: inline-block;
 				border: none;
+				font-family: 'Quicksand', sans-serif;
 				background: transparent;
 				font-weight: 700;
 				font-size: 1.1em;
@@ -21,6 +24,27 @@ body[data-page='dashboard'] {
 				float: right;
 				cursor: pointer;
 				margin-top: 18px;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+
+			.dropdown {
+				position: absolute;
+				top: 0px;
+				right: 0px;
+
+				.dropdown-menu {
+					left: -190px;
+				}
+
+				button {
+
+					&:after {
+						display: none;
+					}
+
+				}
+
 			}
 
 		}

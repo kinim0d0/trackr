@@ -31,6 +31,8 @@ $(document).ready(function() {
     $('#daterange').daterangepicker();
 })
 
+var $h = $("html");
+
 // Triggers actions on input enter
 $("html").on("keyup", "input", function (e) {
 
@@ -56,3 +58,7 @@ $("html").on("keyup", "input", function (e) {
     }
 
 });
+
+$("html").on("click touch", ".dropdown-toggle", function() {
+    $(this).parent().toggleClass("show");
+})

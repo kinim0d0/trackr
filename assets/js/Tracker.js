@@ -28,3 +28,16 @@ $("html").on("click touch", ".tracker .inner", function() {
     tracker.toggle($(this).attr("data-id"));
 
 })
+
+$h.on("click touch", ".color-picker .color", function() {
+
+    var $this = $(this);
+
+    if ($this.hasClass("selected"))
+        return;
+
+    $(".color-picker .color").removeClass("selected");
+
+    $this.addClass("selected");
+
+})

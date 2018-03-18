@@ -37,6 +37,15 @@
 
 			}
 
+			.more-dropdown {
+				opacity: 0;
+				position: absolute;
+				right: 0;
+				top: 0;
+				margin: 12px 35px;
+				transition: opacity 0.3s;
+			}
+
 			&.active {
 				animation: pulse 4s infinite;
 				border: 8px solid rgba(0,0,0,0.2);
@@ -129,6 +138,11 @@
 			.inner {
 				border-radius: 100% 24px 100% 100%;
 				box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
+				.more-dropdown {
+					opacity: 1;
+				}
+
 			}
 
 		}

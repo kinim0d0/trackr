@@ -10,7 +10,43 @@
 
 					<h1>Trackers</h1>
 
-					<button>Add</button>
+					<div class="dropdown">
+
+						<button class="dropdown-toggle" id="dropdownMenuButton" aria-haspopup="true" aria-expanded="false">
+						Add
+						</button>
+
+						<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+							<h2>Add a <span class='type'>Tracker<span></h2>
+						
+							<div class="form-group">
+								<label>Name</label>
+								<input type="text">
+							</div>
+
+							<div class="form-group">
+
+								<div class="color-picker">
+
+									<span class="color" data-color="pink"></span>
+									<span class="color" data-color="red"></span>
+									<span class="color" data-color="yellow"></span>
+									<span class="color" data-color="orange"></span>
+									<span class="color" data-color="green"></span>
+									<span class="color" data-color="blue"></span>
+									<span class="color" data-color="purple"></span>
+									<span class="color selected" data-color="grey"></span>
+
+								</div>
+
+							</div>
+
+							<button class='submit-btn'>Save</button>
+
+						</div>
+
+					</div>
 
 				</div>
 
@@ -19,6 +55,7 @@
 					<div class="tracker col-md-3" data-color="pink">
 
 						<div class="inner">
+							<i class="fas fa-ellipsis-h more-dropdown"></i>
 							<p class="name">Working</p>
 							<p class="time">0:00</p>
 						</div>
@@ -28,6 +65,7 @@
 					<div class="tracker col-md-3" data-color="red">
 
 						<div class="inner">
+							<i class="fas fa-ellipsis-h more-dropdown"></i>
 							<p class="name">Working</p>
 							<p class="time">0:00</p>
 						</div>
