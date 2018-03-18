@@ -4,9 +4,10 @@ var Schema = mongoose.Schema;
 var trackerSchema = Schema({
 
 	localId: {type: String, required: true},
-	name: {type: String},
-	days: {type: Schema.Type.Mixed},
-	color: {type: Number}
+	name: {type: String, required: true},
+	days: {type: Schema.Types.Mixed, required: true},
+	color: {type: String, required: true},
+	deleted: {type: Boolean, required: true}
 	/*
 		daysSinceEpoch: {
 			description,
@@ -36,56 +37,39 @@ var trackerSchema = Schema({
 
 trackerSchema.statics.findByLocalId = function(data, cb) {
 
-    var Card = require('../schemas/Card.js')
+    var Tracker = require('../schemas/Tracker.js')
 
-    Card
+    Tracker
         .find({'userId': data.userId, 'localId': data.localId})
-        .exec(function(err, file) {
-            if (err) console.error(err);
-            //console.log(journal);
+        .exec(function(err, tracker) {
+
+            if (err) console.log(err);
+
             if (cb == undefined) {
-                console.log(file);
-                return file;
+                return tracker;
             } else {
-                cb(err, file);
+                cb(err, tracker);
             }
             return;
         })
-
-}
-
-trackerSchema.statics.findByLocalIds = function(data, cb) {
-
-    var Card = require('../schemas/Card.js')
-
-    Card
-        .find({'userId': data.userId, 'localId': { $in: data.localIds }})
-        .exec(function(err, cards) {
-            if (err) console.error(err);
-            if (cb == undefined) {
-                return cards;
-            } else {
-                cb(err, cards);
-            }
-            return;
-        })
-
 
 }
 
 trackerSchema.statics.getAllFromUser = function(userId, cb) {
 
-    var Card = require('../schemas/Card.js')
+    var Tracker = require('../schemas/Tracker.js')
 
-    Card
+    Tracker
         .find({'userId': userId, 'deleted': false}, "localId")
-        .exec(function(err, cards) {
+        .exec(function(err, tracker) {
+
             if (cb !== null) {
-                cb(null, cards);
+                cb(null, tracker);
                 return;
             } else {
-                return cards;
+                return tracker;
             }
+
         })
 
 }

@@ -95,6 +95,9 @@ app.get("/", function(req, res) {
 var UserController = require('./controller/User');
 app.use('/user', UserController);
 
+var TrackerController = require('./controller/Tracker');
+app.use('/tracker', TrackerController);
+
 app.listen(port, function(err) {
 	if (err) console.log(err);
 	console.log("Server running on " + port);

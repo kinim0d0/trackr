@@ -43,14 +43,9 @@ $("html").on("keyup", "input", function (e) {
         switch(action) {
 
             case "trigger":
-                console.log("trigger");
                 var $element = $(this).attr("data-trigger");
                 $element = $($element).first();
                 $element.trigger("click");
-                break;
-
-            default:
-                console.log("Unkown action");
                 break;
 
         }

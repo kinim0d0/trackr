@@ -9,7 +9,7 @@ class Server {
 	 */
 	api(url, data, callback) {
 
-		$(".status, .status p").text("").removeClass("error").removeClass("success");
+		$(".server-error").remove();
 
 		console.log("API");
 		console.log(url);
