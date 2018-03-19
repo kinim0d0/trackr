@@ -1,0 +1,43 @@
+@import '../colors.scss';
+
+.log-container {
+	
+	.log {
+		border-left-style: solid;
+		border-left-width: 12px;
+		padding: 12px 24px 12px 24px;
+		margin-left: 80px;
+		position: relative;
+		margin-bottom: 12px;
+
+		p {
+			font-size: 1.4em;
+			margin: 0;
+		}
+
+		.description {
+			margin-top: 12px;
+			font-weight: 300;
+		}
+
+		.time {
+			position: absolute;
+			left: -60px;
+
+			&.start {
+				top: 0px;
+			}
+
+			&.end {
+				bottom: 0px;
+			}
+
+		}
+
+		&.direct {
+			margin-bottom: 0;
+		}
+
+	}
+
+}

@@ -29,6 +29,8 @@ var app;
 $(document).ready(function() {
     app = new App("LOCAL");
     $('#daterange').daterangepicker();
+    storage.init();
+    console.log(storage);
 })
 
 var $h = $("html");

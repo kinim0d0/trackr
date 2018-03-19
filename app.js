@@ -17,31 +17,7 @@ app.use(express.static("assets/public"));
 app.use(express.static("views"));
 app.set("view engine", "ejs");
 
-// Connect to DB
-
-/*var dbLink = Settings.DB_LINK;
-
-mongoose.connect(dbLink, {
-  config: { autoIndex: true } 
-})
-
-define("DB_LINK", "mongodb://localhost/diary");
-
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("CONNECTED TO DB");
-})*/
-
-/*var api = require("./routes/api");
-app.use('/api', api);*/
-
 app.use(function(req, res, next) {
-
-  /*app.locals.user = null;
-
-  console.log(user);*/
 
   next();
 
@@ -68,7 +44,10 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-  //console.log("Session ?");
+  if (req.session.userId == undefined) {
+    req.session.userId = "5aae59242c44323f9c8763b1";
+    console.log("RELOG");
+  }
 
   if (req.session.userId == undefined) {
 

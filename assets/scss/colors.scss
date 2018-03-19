@@ -9,3 +9,20 @@ $green: #76A665;
 $blue: #4AA6B5;
 $purple: #9F609C;
 $grey: #928181;
+
+
+*[data-border-color='red'] { border-color: $red; }
+
+*[data-border-color='yellow'] { border-color: $yellow; }
+
+*[data-border-color='orange'] { border-color: $orange; }
+
+*[data-border-color='green'] { border-color: $green; }
+
+*[data-border-color='blue'] { border-color: $blue; }
+
+*[data-border-color='pink'] { border-color: $pink; }
+
+*[data-border-color='purple'] { border-color: $purple; }
+
+*[data-border-color='grey'] { border-color: $grey }
