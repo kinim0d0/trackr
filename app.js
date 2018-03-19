@@ -45,8 +45,8 @@ db.once('open', function() {
 app.get("/dashboard*", function(req, res) {
 
   if (req.session.userId == undefined) {
-    req.session.userId = "5aae59242c44323f9c8763b1";
-    console.log("RELOG");
+   /// req.session.userId = "5aae59242c44323f9c8763b1";
+   ///console.log("RELOG");
   }
 
   if (req.session.userId == undefined) {
