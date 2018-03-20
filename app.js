@@ -44,7 +44,14 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
+<<<<<<< HEAD
   if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+=======
+  if (req.session.userId == undefined) {
+   /// req.session.userId = "5aae59242c44323f9c8763b1";
+   ///console.log("RELOG");
+  }
+>>>>>>> 6f90fba42b0dc4bac946dfb6cb50ae1c2f5a4714
 
   if (req.session.userId == undefined) {
 
