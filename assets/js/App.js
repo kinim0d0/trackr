@@ -27,10 +27,14 @@ var app;
 //var app = new App("DEV");
 
 $(document).ready(function() {
+
     app = new App("LOCAL");
     $('#daterange').daterangepicker();
+
     storage.init();
-    console.log(storage);
+    tracker.init();
+    server.init();
+
 })
 
 var $h = $("html");
@@ -39,7 +43,7 @@ var $h = $("html");
 $("html").on("keyup", "input", function (e) {
 
     if ( (e.keyCode == 13) && ($(this).hasClass("on-enter")) ) {
-        
+
         var action = $(this).attr("data-enter");
 
         switch(action) {

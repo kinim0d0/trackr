@@ -1,7 +1,7 @@
 @import '../colors.scss';
 
 .tracker-container {
-	
+
 	.tracker {
 		margin: 0em 0em 3em 0em;
 		background: transparent;
@@ -9,7 +9,7 @@
 		.inner {
 			width: 200px;
 			height: 200px;
-			border-radius: 100%;
+			border-radius: 12px;
 			cursor: pointer;
 			margin: auto;
 			box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
@@ -41,9 +41,10 @@
 			.more-dropdown {
 				opacity: 0;
 				position: absolute;
-				right: 0;
+				right: 50%;
+				transform: translate(50%, 0);
 				top: 0;
-				margin: 12px 35px;
+				margin: 12px 0px;
 				transition: opacity 0.3s;
 			}
 
@@ -137,7 +138,6 @@
 		&:hover {
 
 			.inner {
-				border-radius: 100% 24px 100% 100%;
 				box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 
 				.more-dropdown {

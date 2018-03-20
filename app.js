@@ -33,7 +33,7 @@ var DB_LINK = "mongodb://localhost/trackr";
 //var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
 
 mongoose.connect(DB_LINK, {
-  config: { autoIndex: true } 
+  config: { autoIndex: true }
 })
 
 var db = mongoose.connection;
@@ -44,10 +44,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-  if (req.session.userId == undefined) {
-    req.session.userId = "5aae59242c44323f9c8763b1";
-    console.log("RELOG");
-  }
+  if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
   if (req.session.userId == undefined) {
 
@@ -76,6 +73,9 @@ app.use('/user', UserController);
 
 var TrackerController = require('./controller/Tracker');
 app.use('/tracker', TrackerController);
+
+var SyncController = require('./controller/Sync');
+app.use('/sync', SyncController);
 
 app.listen(port, function(err) {
 	if (err) console.log(err);

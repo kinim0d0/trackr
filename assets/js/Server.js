@@ -50,7 +50,7 @@ class Server {
 					callback(false, data);
 				}
 
-				$(".submit-btn").removeClass("disabled");				
+				$(".submit-btn").removeClass("disabled");
 
 			}
 
@@ -67,6 +67,75 @@ class Server {
 	 */
 	getParam(name) {
 		return $("body").attr("data-" + name);
+	}
+
+	init() {
+		this.sync()
+	}
+
+	sync() {
+
+		if (storage.state == undefined) {
+
+			storage.state = {
+				lastSync: 0,
+				queue: []
+			};
+
+		}
+
+		server.api("/sync", { lastSync: storage.state.lastSync || 0  }, server.syncEnd);
+
+	}
+
+	syncEnd(err, data) {
+
+		cl("Data from server");
+		cl(data);
+
+		var updates = data.log;
+
+		for (var a = 0; a < updates.length; a++) {
+
+			var update = updates[a];
+			if (update == undefined) continue;
+			var type;
+			if (update.localId != undefined) {
+				type = update.localId.substr(0,2)
+			}
+
+			console.log(update);
+
+			switch(type) {
+
+				case "TR":
+					tracker.saveToLocal(update);
+					break;
+
+				case "TI":
+					cl('Tracked time')
+					break;
+
+				case "TA":
+					cl('Task')
+					break;
+
+				default:
+					console.log("Unknown update type");
+					break;
+
+			}
+
+		}
+
+		storage.saveState();
+		storage.state.lastSync = data.lastSync;
+		storage.saveState();
+
+		tracker.reloadList();
+
+		cl("groupEnd");
+
 	}
 
 }
@@ -91,7 +160,7 @@ $("html").on("click touch", ".login-btn", function() {
 		if (success == true) {
 
 			if (data.data.view == "loggedIn") {
-				location.href = "/dashboard";	
+				location.href = "/dashboard";
 			} else if (data.data.view == "signup") {
 				$(".password-group").removeClass("hide");
 			} if (data.data.view == "login") {
@@ -105,7 +174,7 @@ $("html").on("click touch", ".login-btn", function() {
 			if (data.error != undefined) {
 				$(data.error.field).parent().append("<label class='error-msg'>" + data.error.msg + "</label>");
 			}
-			
+
 		}
 
 	});
@@ -116,7 +185,7 @@ $("html").on("click touch", ".login-btn", function() {
 $("input").on('keyup', function (e) {
 
     if ( (e.keyCode == 13) && ($(this).hasClass("on-enter")) ) {
-        
+
     	var action = $(this).attr("data-enter");
 
     	switch(action) {

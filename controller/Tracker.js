@@ -3,7 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
-    
+
 router.route('/edit')
 
     .post(function(req, res) {
@@ -44,9 +44,7 @@ router.route('/edit')
 
         } else {
 
-            console.log("SAving tracker");
-            console.log(tracker);
-            console.log(req.session);
+            if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
             Tracker.findByLocalId({localId: tracker.localId, userId: req.session.userId}, function(err, trackers) {
 
@@ -55,26 +53,42 @@ router.route('/edit')
                     console.log("not found, create");
 
                     var newTracker = new Tracker(tracker);
+
+                    newTracker.userId = req.session.userId;
                     newTracker.days = {
                         0: null
                     };
+
                     newTracker.save(function(err) {
 
                         if (err) console.log(err);
 
                         res.send({
                             success: true
-                        });   
+                        });
 
                     })
 
                 } else {
 
-                    console.log("updating");
+                    var oldTracker = trackers[0];
+                    oldTracker.name = tracker.name;
+                    oldTracker.color = tracker.color;
+                    oldTracker.deleted = tracker.deleted;
+
+                    oldTracker.save(function(err) {
+
+                        if (err) console.log(err);
+
+                        res.send({
+                            success: true
+                        });
+
+                    })
 
                 }
 
-            })        
+            })
 
         }
 

@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var trackerSchema = Schema({
 
 	localId: {type: String, required: true},
+	userId: {type: Schema.Types.ObjectId, required: true},
 	name: {type: String, required: true},
 	days: {type: Schema.Types.Mixed, required: true},
 	color: {type: String, required: true},
@@ -60,7 +61,7 @@ trackerSchema.statics.getAllFromUser = function(userId, cb) {
     var Tracker = require('../schemas/Tracker.js')
 
     Tracker
-        .find({'userId': userId, 'deleted': false}, "localId")
+        .find({'userId': userId, 'deleted': false})
         .exec(function(err, tracker) {
 
             if (cb !== null) {
