@@ -16,7 +16,8 @@ gulp.task('scripts', function () {
 		.pipe(concat("main.min.js"))
 		.pipe(es6transpiler({
 			"globals": {
-				"$": true
+				"$": true,
+				"io": true
 			}
 		}))
 		.pipe(gulp.dest('assets/public/js'));
@@ -34,7 +35,7 @@ gulp.task('default', ['styles', 'scripts', 'external-scripts', 'external-styles'
 })
 
 gulp.task('external-scripts', function () {
-	return gulp.src([	
+	return gulp.src([
 		'bower_components/jquery/dist/jquery.min.js',
 		'bower_components/jquery-ui/jquery-ui.js',
 		'bower_components/bootstrap/dist/js/bootstrap.min.js',
@@ -42,7 +43,8 @@ gulp.task('external-scripts', function () {
 		'bower_components/simplePagination.js/jquery.simplePagination.js',
 		'bower_components/socket.io-1.2.0.js',
 		//'bower_components/moment/min/moment.min.js',
-		//'bower_components/bootstrap-daterangepicker/daterangepicker.js'
+		//'bower_components/bootstrap-daterangepicker/daterangepicker.js',
+		//'assets/public/js/socket.io-1.2.0.js'
 	])
 	.pipe(concat("externals.min.js"))
 	.pipe(gulp.dest('assets/public/js'));

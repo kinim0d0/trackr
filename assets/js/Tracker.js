@@ -27,9 +27,13 @@ class Tracker {
 
     reloadList() {
 
-        $('.tracker-container').empty();
+        if (storage.trackers == undefined) {
+            storage.trackers = {
+        		list: []
+        	}
+        }
 
-        cl(storage.trackers.list.length)
+        $('.tracker-container').empty();
 
         for (var i = 0; i < storage.trackers.list.length; i++) {
             var localId = storage.trackers.list[i]
@@ -92,8 +96,6 @@ class Tracker {
 
     save(data) {
 
-        cl('saving', data);
-
         this.saveToLocal(data);
 
         server.api("tracker/edit", data, function (success, data) {
@@ -113,8 +115,6 @@ class Tracker {
     }
 
     saveToLocal(data) {
-
-        cl('saving to local', data)
 
         if (storage.trackers == null) {
 
@@ -187,17 +187,12 @@ $h.on("click touch", ".save-tracker-btn", function() {
 
     var localId = $this.attr('data-id');
 
-    cl(localId)
-
     if ( (localId == undefined) || (localId == "") ) {
         cl('creating new')
         localId = 'TR' + utilities.generateLocalId();
     } else {
         cl('updating')
     }
-
-    cl(localId);
-    cl($this.parent())
 
     var data = {
         name: $this.find("input.name").first().val(),

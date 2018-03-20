@@ -3,6 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
+var Log = require('../schemas/Log');
 
 router.route('/edit')
 
@@ -63,9 +64,21 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        res.send({
-                            success: true
-                        });
+                        var log = new Log({
+                            localId: newTracker.localId,
+                            userId: req.session.userId,
+                            contentId: newTracker._id
+                        })
+
+                        log.save(req, function(err, log) {
+
+            				if (err) console.log(err);
+
+            				res.send({
+            					success: true
+            				});
+
+            			})
 
                     })
 
@@ -80,9 +93,7 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        res.send({
-                            success: true
-                        });
+                        return oldTracker.localId
 
                     })
 

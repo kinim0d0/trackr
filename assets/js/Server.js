@@ -7,6 +7,8 @@ class Server {
 	 *
 	 *  Sends an api request
 	 */
+
+
 	api(url, data, callback) {
 
 		$(".server-error").remove();
@@ -38,6 +40,11 @@ class Server {
 				}
 
 				$(".submit-btn").removeClass("disabled");
+
+				setTimeout(function() {
+					server.connectToSocket()
+				})
+
 
 			},
 
@@ -90,9 +97,6 @@ class Server {
 
 	syncEnd(err, data) {
 
-		cl("Data from server");
-		cl(data);
-
 		var updates = data.log;
 
 		for (var a = 0; a < updates.length; a++) {
@@ -134,7 +138,46 @@ class Server {
 
 		tracker.reloadList();
 
-		cl("groupEnd");
+	}
+
+	constructor() {
+        this.socketConnection = false;
+	}
+
+	connectToSocket() {
+
+		if (server.socketConnection == true) {
+			return;
+		}
+
+		server.socketConnection = true;
+
+		cl("setting up socketIO");
+		var socket = io('http://localhost:3002')
+
+		socket.on('realTimeSyncStarted', function(data){
+			cl("Connected to socket");
+		  	cl(data);
+		})
+
+		socket.on('disconnect', function () {
+			cl( 'disconnected from server' );
+			server.socketConnection = false;
+			setTimeout(function() {
+				server.connectToSocket();
+			}, 5000);
+		} );
+
+		socket.emit('startRealTimeSync', {
+			userId: '5aae59242c44323f9c8763b1',
+			sessionId: '123'
+		});
+
+		socket.on('update', function(update){
+		 	setTimeout(function(){
+		 		server.sync();
+		 	}, 300)
+		});
 
 	}
 

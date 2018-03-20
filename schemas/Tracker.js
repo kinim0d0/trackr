@@ -40,9 +40,14 @@ trackerSchema.statics.findByLocalId = function(data, cb) {
 
     var Tracker = require('../schemas/Tracker.js')
 
+	console.log(data.userId);
+	console.log(data.localId);
+
     Tracker
-        .find({'userId': data.userId, 'localId': data.localId})
+        .find({'userId': mongoose.Types.ObjectId(data.userId), 'localId': data.localId})
         .exec(function(err, tracker) {
+
+			console.log(tracker)
 
             if (err) console.log(err);
 

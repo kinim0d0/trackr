@@ -15,6 +15,7 @@ var port = process.env.PORT || 3000;
 
 app.use(express.static("assets/public"));
 app.use(express.static("views"));
+app.use(express.static("bower_components"));
 app.set("view engine", "ejs");
 
 app.use(function(req, res, next) {
@@ -44,14 +45,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-<<<<<<< HEAD
   if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
-=======
-  if (req.session.userId == undefined) {
-   /// req.session.userId = "5aae59242c44323f9c8763b1";
-   ///console.log("RELOG");
-  }
->>>>>>> 6f90fba42b0dc4bac946dfb6cb50ae1c2f5a4714
 
   if (req.session.userId == undefined) {
 
@@ -89,9 +83,57 @@ app.listen(port, function(err) {
 	console.log("Server running on " + port);
 })
 
-/*var http = require('http').Server(app);
+var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 http.listen(3002, function(){
   console.log('Socket IO running on ' + 3002);
-});*/
+});
+
+app.locals.io = io;
+app.locals.connections = {
+
+}
+
+io.on('connection', function(socket){
+
+  socket.on('startRealTimeSync', function(user){
+
+    var userConnections = app.locals.connections[user.userId];
+
+    if (userConnections == undefined) {
+      userConnections = [socket.id]
+    } else {
+      userConnections.push(socket.id);
+    }
+
+    console.log( user.userId + "Socket IO open on: " + socket.id);
+
+    app.locals.connections[user.userId] = userConnections;
+
+    io.sockets.connected[socket.id].emit('realTimeSyncStarted', {
+    	socketId: socket.id
+    });
+
+  });
+
+  socket.on('disconnect', function() {
+
+    console.log("Socket IO closed on: " + socket.id)
+    var connections = app.locals.connections;
+
+    for(var key in connections) {
+      var user = connections[key];
+      for (var i = 0; i < user.length; i++) {
+        if (user[i] == socket.id) {
+          user.splice(i, 1);
+        }
+      }
+      connections.key = user;
+    }
+
+    app.locals.connections = connections
+
+  });
+
+});
