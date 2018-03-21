@@ -38,7 +38,8 @@ class Tracker {
             start: dateNow,
             end: null,
             notes: [],
-            localId: "TI" + utilities.generateLocalId()
+            localId: "TI" + utilities.generateLocalId(),
+            trackerId: localId
         }
 
         this.saveTimer(localId, timer)
@@ -59,10 +60,11 @@ class Tracker {
         }
 
         if (tracker[daysSinceEpoch] == undefined) {
-            tracker[daysSinceEpoch] = []
+            tracker[daysSinceEpoch] = {}
         }
 
-        tracker[daysSinceEpoch].push(timer);
+        var day = tracker[daysSinceEpoch];
+        day[timer.localId] = timer;
 
         cl(tracker[daysSinceEpoch]);
         cl(storage.trackers[localId])
@@ -70,6 +72,12 @@ class Tracker {
         storage.saveState();
 
         // save to server
+
+        server.api("tracker/editTimer", timer, function (success, data) {
+
+            cl("Timer saved to server", success, data);
+
+        })
 
         this.currentTimer = timer;
 

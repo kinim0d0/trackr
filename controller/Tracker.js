@@ -107,4 +107,60 @@ router.route('/edit')
 
     })
 
+    router.route('/editTimer')
+
+        .post(function(req, res) {
+
+            var timer = req.body;
+            var error;
+
+            console.log(timer)
+
+            if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+
+            Tracker.findByLocalId({localId: timer.trackerId, userId: req.session.userId}, function(err, trackers) {
+
+                if (trackers.length == 0) {
+
+                    console.log("not found tracker");
+
+                } else {
+
+                    var tracker = trackers[0];
+
+                    var day = Tracker.daysFromEpoch(timer.start);
+
+                    var days = tracker['days'];
+
+                    if (days[day] == undefined) {
+
+                        days[day] = {
+
+                        }
+
+                    }
+
+                    days[day][timer.localId] = timer
+                    // TODO edit
+
+                    console.log(tracker)
+
+                    tracker.markModified('days');
+
+                    tracker.save(function(err, tracker) {
+
+                        if (err) console.log(err);
+
+                        res.send({
+                            success: true
+                        });
+
+                    })
+
+                }
+
+            })
+
+        })
+
 module.exports = router;

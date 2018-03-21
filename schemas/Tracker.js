@@ -61,6 +61,14 @@ trackerSchema.statics.findByLocalId = function(data, cb) {
 
 }
 
+trackerSchema.statics.daysFromEpoch = function(dateTo) {
+	dateTo = Date.parse(dateTo)
+	var epocDate = new Date(new Date().getTime() / 1000);
+	var res = Math.abs(dateTo - epocDate) / 1000;
+	var days = Math.floor(res / 86400);
+	return days
+}
+
 trackerSchema.statics.getAllFromUser = function(userId, cb) {
 
     var Tracker = require('../schemas/Tracker.js')
