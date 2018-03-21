@@ -99,16 +99,11 @@ class Server {
 
 		var updates = data.log;
 
-		for (var a = 0; a < updates.length; a++) {
+		for (var a = 0; a < updates.length; a += 2) {
 
-			var update = updates[a];
-			if (update == undefined) continue;
-			var type;
-			if (update.localId != undefined) {
-				type = update.localId.substr(0,2)
-			}
-
-			console.log(update);
+			var id = updates[a]
+			var update = updates[a+1];
+			var	type = update.localId.substr(0,2)
 
 			switch(type) {
 
@@ -117,7 +112,7 @@ class Server {
 					break;
 
 				case "TI":
-					cl('Tracked time')
+					tracker.saveTimerToLocal(update)
 					break;
 
 				case "TA":

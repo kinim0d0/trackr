@@ -93,7 +93,21 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        return oldTracker.localId
+                        var log = new Log({
+                            localId: oldTracker.localId,
+                            userId: req.session.userId,
+                            contentId: oldTracker._id
+                        })
+
+                        log.save(req, function(err, log) {
+
+                            if (err) console.log(err);
+
+                            res.send({
+                                success: true
+                            });
+
+                        })
 
                     })
 
@@ -141,9 +155,6 @@ router.route('/edit')
                     }
 
                     days[day][timer.localId] = timer
-                    // TODO edit
-
-                    console.log(tracker)
 
                     tracker.markModified('days');
 
@@ -151,9 +162,21 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        res.send({
-                            success: true
-                        });
+                        var log = new Log({
+                            localId: timer.localId + "#" + timer.day,
+                            userId: req.session.userId,
+                            contentId: tracker._id
+                        })
+
+                        log.save(req, function(err, log) {
+
+                            if (err) console.log(err);
+
+                            res.send({
+                                success: true
+                            });
+
+                        })
 
                     })
 

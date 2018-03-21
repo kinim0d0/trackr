@@ -72,6 +72,7 @@ logSchema.statics.getUpdatesSince = function(data, cb) {
 		Tracker.getAllFromUser(data.userId, function(err, trackers) {
 
             for (tracker in trackers) {
+				allData.push('TR');
                 allData.push(trackers[tracker]);
             }
 
@@ -98,9 +99,15 @@ logSchema.statics.getUpdatesSince = function(data, cb) {
 
                 var type = result.localId.substr(0,2);
 
+				content.push(result.localId);
+
                 switch (type) {
 
                     case "TR":
+						content.push(Tracker.findById(result.contentId));
+                        break;
+
+					case "TI":
 						content.push(Tracker.findById(result.contentId));
                         break;
 
@@ -112,11 +119,20 @@ logSchema.statics.getUpdatesSince = function(data, cb) {
 
             }
 
-			console.log(content);
-
             return Promise.all(content);
 
         }).then(function(results) {
+
+			for (var i = 0; i < results.length; i += 2) {
+				if (results[i].substr(0, 2) == "TI") {
+					var tracker = results[i+1];
+					var localId = results[i].split("#");
+					var timerLocalId = localId[0];
+					var timerDay = localId[1];
+					var timer = tracker.days[timerDay][timerLocalId];
+					results[i+1] = timer;
+				}
+			}
 
             cb(null, results);
             return;

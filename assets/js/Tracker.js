@@ -12,19 +12,23 @@ class Tracker {
      */
     toggle(localId) {
 
-        console.log("Toggling tracker:  " + localId)
+        console.log("Toggling tracker:  " + localId);
+
+        var stopped = false;
 
         $('.tracker .inner.active').each(function() {
             var id = $(this).parent().attr('data-id');
             if (id != localId) {
-                console.log('running: ' + id);
-                $(this).removeClass('active');
-                // TODO stop timer
+                tracker.stopTimer(id);
+                stopped = true;
             }
         })
 
-        this.createTimer(localId);
-        // Start save upload sync
+        if ( (!stopped) && (tracker.updateInterval != null) ) {
+            this.stopTimer(localId)
+        } else {
+            this.createTimer(localId);
+        }
 
     }
 
@@ -39,7 +43,8 @@ class Tracker {
             end: null,
             notes: [],
             localId: "TI" + utilities.generateLocalId(),
-            trackerId: localId
+            trackerId: localId,
+            day: utilities.daysFromEpoch(utilities.getTimestamp())
         }
 
         this.saveTimer(localId, timer)
@@ -48,7 +53,7 @@ class Tracker {
 
     saveTimer(localId, timer) {
 
-        var daysSinceEpoch = utilities.daysFromEpoch(utilities.getTimestamp());
+        var daysSinceEpoch = timer.day;
         cl(daysSinceEpoch)
 
         var tracker = storage.trackers[localId];
@@ -85,7 +90,37 @@ class Tracker {
 
     }
 
-    saveTimerToLocal() {
+    saveTimerToLocal(timer) {
+
+        cl('saving to local timer', timer);
+
+        storage.trackers[timer.trackerId].days[timer.day][timer.localId] = timer;
+
+        storage.saveState();
+
+    }
+
+    stopTimer(localId) {
+
+        console.log('Stopping: ');
+        cl(localId);
+        $('.tracker[data-id="'+ localId + '"] .inner').removeClass('active');
+
+        clearInterval(this.updateInterval);
+
+        var timer = this.currentTimer;
+        timer.end = new Date();
+
+        var tracker = storage.trackers[localId];
+        var day = tracker.days[timer.day];
+        day[timer.localId] = timer;
+        cl(tracker, day, timer);
+
+        //storage.trackers[localId][timer.day][timer.localId] = timer
+
+        storage.saveState();
+
+        this.currentTimer = null;
 
     }
 
@@ -113,6 +148,10 @@ class Tracker {
 
     render(data) {
 
+        if (data == undefined) {
+            return;
+        }
+
         $('.tracker-container').append('\
             <div class="tracker col-md-3" data-id="' + data.localId + '" data-color="' + data.color + '">\
                 <div class="inner">\
@@ -136,8 +175,25 @@ class Tracker {
         $('.tracker-container').empty();
 
         for (var i = 0; i < storage.trackers.list.length; i++) {
-            var localId = storage.trackers.list[i]
-            this.render(storage.trackers[localId]);
+
+            var localId = storage.trackers.list[i];
+            var trackerInt = storage.trackers[localId];
+
+            if ( (trackerInt == undefined) || (trackerInt.days == undefined) )
+                continue;
+
+            var todaysTimers = trackerInt.days[utilities.daysFromEpoch()];
+
+            cl(trackerInt, 'trackersfortodaz', todaysTimers);
+
+            for (var timer in todaysTimers) {
+                if (timer.end == null) {
+                    cl('found unended', timer)
+                }
+            }
+
+            this.render(trackerInt);
+
         }
 
     }
