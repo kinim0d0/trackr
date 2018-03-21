@@ -1,5 +1,10 @@
 class Tracker {
 
+    constructor() {
+        this.updateInterval = null;
+        this.currentTimer = null;
+	}
+
     /**
      *  @param {String} Enviroment
      *
@@ -9,7 +14,94 @@ class Tracker {
 
         console.log("Toggling tracker:  " + localId)
 
+        $('.tracker .inner.active').each(function() {
+            var id = $(this).parent().attr('data-id');
+            if (id != localId) {
+                console.log('running: ' + id);
+                $(this).removeClass('active');
+                // TODO stop timer
+            }
+        })
+
+        this.createTimer(localId);
+        // Start save upload sync
+
     }
+
+    createTimer(localId) {
+
+        cl('starting: ' + localId);
+
+        var dateNow = new Date();
+
+        var timer = {
+            start: dateNow,
+            end: null,
+            notes: [],
+            localId: "TI" + utilities.generateLocalId()
+        }
+
+        this.saveTimer(localId, timer)
+
+    }
+
+    saveTimer(localId, timer) {
+
+        var daysSinceEpoch = utilities.daysFromEpoch(utilities.getTimestamp());
+        cl(daysSinceEpoch)
+
+        var tracker = storage.trackers[localId];
+
+        if (tracker == undefined) {
+            tracker = {
+
+            }
+        }
+
+        if (tracker[daysSinceEpoch] == undefined) {
+            tracker[daysSinceEpoch] = []
+        }
+
+        tracker[daysSinceEpoch].push(timer);
+
+        cl(tracker[daysSinceEpoch]);
+        cl(storage.trackers[localId])
+
+        storage.saveState();
+
+        // save to server
+
+        this.currentTimer = timer;
+
+        this.startTimer();
+
+    }
+
+    saveTimerToLocal() {
+
+    }
+
+    startTimer() {
+
+        if (this.updateInterval == null) {
+
+            this.updateInterval = setInterval(function() {
+
+                var now = new Date()
+                var startDate = tracker.currentTimer.start;
+
+                var secondsDiff = utilities.secondsBetweenDates(now, startDate);
+                var timestamp = utilities.formatSecondsAsTime(secondsDiff)
+
+                $('.tracker .inner.active').first().find('.time').text(timestamp);
+
+            }, 1000)
+
+        }
+
+    }
+
+    //TODO render on blur and focus
 
     render(data) {
 
@@ -18,7 +110,7 @@ class Tracker {
                 <div class="inner">\
                     <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
                     <p class="name">' + data.name + '</p>\
-                    <p class="time">0:00</p>\
+                    <p class="time">00:00:00</p>\
                 </div>\
             </div>\
         ')
@@ -164,7 +256,7 @@ $("html").on("click touch", ".tracker .inner", function() {
         $this.addClass("active");
     }
 
-    tracker.toggle($(this).attr("data-id"));
+    tracker.toggle($(this).parent().attr("data-id"));
 
 })
 
