@@ -25,7 +25,7 @@ class Tracker {
         })
 
         if ( (!stopped) && (tracker.updateInterval != null) ) {
-            this.stopTimer(localId)
+            //this.stopTimer(localId)
         } else {
             this.createTimer(localId);
         }
@@ -64,11 +64,11 @@ class Tracker {
             }
         }
 
-        if (tracker[daysSinceEpoch] == undefined) {
-            tracker[daysSinceEpoch] = {}
+        if (tracker.days[daysSinceEpoch] == undefined) {
+            tracker.days[daysSinceEpoch] = {}
         }
 
-        var day = tracker[daysSinceEpoch];
+        var day = tracker.days[daysSinceEpoch];
         day[timer.localId] = timer;
 
         cl(tracker[daysSinceEpoch]);
@@ -126,17 +126,28 @@ class Tracker {
 
     startTimer() {
 
-        if (this.updateInterval == null) {
+        cl('start timer ()')
+
+        if (tracker.updateInterval == null) {
+
+            cl('starting timer', tracker.currentTimer)
 
             this.updateInterval = setInterval(function() {
 
                 var now = new Date()
                 var startDate = tracker.currentTimer.start;
 
+                if (typeof startDate == 'string') {
+                    startDate = new Date(Date.parse(startDate))
+                    cl(startDate)
+                }
+
                 var secondsDiff = utilities.secondsBetweenDates(now, startDate);
                 var timestamp = utilities.formatSecondsAsTime(secondsDiff)
 
                 $('.tracker .inner.active').first().find('.time').text(timestamp);
+
+                cl('timestamp update', timestamp)
 
             }, 1000)
 
@@ -184,15 +195,33 @@ class Tracker {
 
             var todaysTimers = trackerInt.days[utilities.daysFromEpoch()];
 
-            cl(trackerInt, 'trackersfortodaz', todaysTimers);
-
-            for (var timer in todaysTimers) {
-                if (timer.end == null) {
-                    cl('found unended', timer)
-                }
-            }
+            cl(trackerInt, 'Trackers timers for today: ', todaysTimers, '---');
 
             this.render(trackerInt);
+
+            if (todaysTimers != undefined) {
+
+                for (var key in todaysTimers) {
+
+                    if (todaysTimers.hasOwnProperty(key)) {
+
+                        var timer = todaysTimers[key];
+                        cl(timer)
+                        if ( (timer.end == null) || (timer.end == "") ) {
+                            cl('found unended', timer)
+                            tracker.currentTimer = timer;
+                            clearInterval(this.updateInterval);
+                            $('.tracker[data-id="' + timer.trackerId + '"] .inner').addClass('active');
+                            //debugger
+                            tracker.updateInterval = null;
+                            tracker.startTimer();
+                        }
+
+                    }
+
+                }
+
+            }
 
         }
 
