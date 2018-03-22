@@ -1,3 +1,5 @@
+@import '../colors';
+
 .date-range {
 	cursor: pointer;
 	position: relative;
@@ -39,11 +41,34 @@
 				display: block;
 				text-align: center;
 				width: 70px;
-				display: none;
 			}
 
 		}
-	
+
+		&.multi-range {
+
+			.separator {
+				position:  absolute;
+				font-size:  5em;
+				left: 80px;
+				top: -30px;
+			}
+
+		}
+
+	}
+
+	&.multi {
+
+		div {
+			width: 120px;
+
+			.month, .year {
+				display: inline-block;
+			}
+
+		}
+
 	}
 
 	input#daterange {
@@ -64,6 +89,42 @@
 
 		&.next-day {
 			right: 30px;
+		}
+
+	}
+
+}
+
+.daterangepicker {
+
+	.calendar {
+
+		.fa-calendar {
+			position: absolute;
+			top: 7px;
+			left: 7px;
+		}
+
+		td.active {
+			background-color: #333;
+		}
+
+	}
+
+	.ranges {
+		float: none !important;
+
+		.range_inputs {
+
+			.cancelBtn {
+				display: none;
+			}
+
+			.applyBtn {
+				background-color: #333;
+				border: none;
+			}
+
 		}
 
 	}

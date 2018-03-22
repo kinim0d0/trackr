@@ -17,7 +17,8 @@ gulp.task('scripts', function () {
 		.pipe(es6transpiler({
 			"globals": {
 				"$": true,
-				"io": true
+				"io": true,
+				"moment": true
 			}
 		}))
 		.pipe(gulp.dest('assets/public/js'));

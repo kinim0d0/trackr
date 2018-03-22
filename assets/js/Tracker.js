@@ -139,7 +139,7 @@ class Tracker {
 
                 if (typeof startDate == 'string') {
                     startDate = new Date(Date.parse(startDate))
-                    cl(startDate)
+                    //cl(startDate)
                 }
 
                 var secondsDiff = utilities.secondsBetweenDates(now, startDate);
@@ -147,7 +147,7 @@ class Tracker {
 
                 $('.tracker .inner.active').first().find('.time').text(timestamp);
 
-                cl('timestamp update', timestamp)
+                //cl('timestamp update', timestamp)
 
             }, 1000)
 
