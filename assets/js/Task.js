@@ -9,6 +9,7 @@ class Task {
         $('.task-container').append('\
 			<div class="task col-md-3" data-color="' + data.color + '">\
 				<div class="inner">\
+                    <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
 					<div class="progress-pie-chart" data-percent="43">\
 					  <div class="ppc-progress">\
 					    <div class="ppc-progress-fill"></div>\
@@ -32,6 +33,43 @@ class Task {
         }
         $('.ppc-progress-fill').css('transform','rotate('+ deg +'deg)');
         $('.ppc-percents span.time').html(data.left + ' left');
+
+    }
+
+    renderEditModal($this) {
+
+        var dropdownTitle = "Add a task";
+        var taskName = "";
+        var taskColor = "red";
+
+        $('.dropdown-menu').remove();
+
+        $this
+        .append('\
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">\
+                <h2>' + dropdownTitle + '</h2>\
+                <div class="form-group">\
+                    <label>Name</label>\
+                    <input class="name" type="text" value="' + taskName + '">\
+                </div>\
+                <div class="form-group">\
+                    <div class="color-picker">\
+                        <span class="color" data-color="pink"></span>\
+                        <span class="color" data-color="red"></span>\
+                        <span class="color" data-color="yellow"></span>\
+                        <span class="color" data-color="orange"></span>\
+                        <span class="color" data-color="green"></span>\
+                        <span class="color" data-color="blue"></span>\
+                        <span class="color" data-color="purple"></span>\
+                        <span class="color selected" data-color="grey"></span>\
+                    </div>\
+                </div>\
+                <button class="submit-btn save-task-btn">Save</button>\
+            </div>\
+        ')
+        .addClass('show')
+        .find('.color[data-color="' + taskColor + '"]')
+            .addClass('selected');
 
     }
 
@@ -123,5 +161,21 @@ class Task {
     }
 
 }
+
+$h.on('click touch', '.task-dropdown-toggle', function(e) {
+
+    e.stopImmediatePropagation();
+
+    var $this = $(this).parent();
+
+    task.renderEditModal($this);
+
+})
+
+$h.on('click touch', '.save-task-btn', function(e) {
+
+
+
+})
 
 var task = new Task();

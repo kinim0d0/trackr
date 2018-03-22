@@ -1,7 +1,7 @@
 @import '../colors.scss';
 
 .log-container {
-	
+
 	.log {
 		border-left-style: solid;
 		border-left-width: 12px;
@@ -9,15 +9,47 @@
 		margin-left: 80px;
 		position: relative;
 		margin-bottom: 12px;
+		position: relative;
 
 		p {
-			font-size: 1.4em;
 			margin: 0;
 		}
 
-		.description {
+		.note {
 			margin-top: 12px;
 			font-weight: 300;
+			position: relative;
+
+			.timestamp {
+				display: inline-block;
+				width: 60px;
+				float: left;
+				padding-left: 4px;
+			}
+
+			.description {
+				display: inline-block;
+				width: calc(100% - 60px);
+			}
+
+			.edit-note {
+				display: none;
+				font-size: 13px;
+				cursor: pointer;
+			}
+
+			&:hover {
+				background-color: rgba(0, 0, 0, 0.1);
+
+				.edit-note {
+					display: inline-block;
+					position: absolute;
+					top: 5px;
+					right: 5px;
+				}
+
+			}
+
 		}
 
 		.time {
@@ -36,6 +68,29 @@
 
 		&.direct {
 			margin-bottom: 0;
+		}
+
+		.edit-timer, .add-note-to-timer {
+			display: none;
+			position: absolute;
+			font-size: 13px;
+			top: 18px;
+		    right: 12px;
+			cursor: pointer;
+
+			&.add-note-to-timer {
+				right: 32px;
+			}
+
+		}
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.05);
+
+			.edit-timer, .add-note-to-timer {
+				display: inline-block;
+			}
+
 		}
 
 	}

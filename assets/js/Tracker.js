@@ -235,7 +235,7 @@ class Tracker {
 
     renderEditModal($this, localId) {
 
-        var dropdownTitle = "Add a new tracker";
+        var dropdownTitle = "Add a tracker";
         var trackerName = "";
         var trackerColor = "red";
 

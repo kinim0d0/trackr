@@ -8,41 +8,47 @@ class Timeline {
     constructor(env) {
 
         this.updateTimelineDate(moment());
+        this.currentDateFrom = moment();
+        this.currentDateTo = null;
 
     }
 
     reloadCharts() {
 
-        var ctx = document.getElementById('main-chart').getContext('2d');
-        var myPieChart = new Chart(ctx,{
-            type: 'pie',
-            data: {
-                datasets: [{
-                    data: [10, 25, 30],
-                    backgroundColor: ['#FFDD5C', '#76A665', '#928181']
-                }],
+        setTimeout(function() {
 
-                // These labels appear in the legend and in the tooltips when hovering different arcs
-                labels: [
-                    'Work',
-                    'Study',
-                    'Movies'
-                ]
-            },
-            options: {
-                segmentShowStroke : true,
-                segmentStrokeColor : "#fff",
-                segmentStrokeWidth : 2,
-                percentageInnerCutout : 50,
-                animationSteps : 100,
-                animationEasing : "easeOutBounce",
-                animateRotate : true,
-                animateScale : false,
-                responsive: true,
-                maintainAspectRatio: true,
-                showScale: true
-            }
-        });
+            var ctx = document.getElementById('main-chart').getContext('2d');
+            var myPieChart = new Chart(ctx,{
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: [10, 25, 30],
+                        backgroundColor: ['#FFDD5C', '#76A665', '#928181']
+                    }],
+
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                    labels: [
+                        'Work',
+                        'Study',
+                        'Movies'
+                    ]
+                },
+                options: {
+                    segmentShowStroke : true,
+                    segmentStrokeColor : "#fff",
+                    segmentStrokeWidth : 2,
+                    percentageInnerCutout : 50,
+                    animationSteps : 100,
+                    animationEasing : "easeOutBounce",
+                    animateRotate : true,
+                    animateScale : false,
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    showScale: true
+                }
+            });
+
+        }, 300)
 
     }
 
@@ -63,6 +69,9 @@ class Timeline {
             }
 
         }
+
+        this.currentDateFrom = dateFrom;
+        this.currentDateTo = dateTo;
 
         $('.date-range').removeClass("multi")
 
@@ -114,7 +123,16 @@ $("html").on("click touch", ".date-range .next-day, .date-range .prev-day", func
 
     e.stopImmediatePropagation();
 
-   console.log('updating date')
+    var dateFrom = timeline.currentDateFrom;
+    var dateTo = timeline.currentDateTo;
+
+   if ($(this).hasClass('.prev-day')) {
+       dateFrom = dateFrom.add(-1, 'day');
+   } else {
+       dateTo = dateTo.add(1, 'day');
+   }
+
+   timeline.updateTimelineDate(dateFrom, dateTo)
 
 });
 
