@@ -25,13 +25,13 @@
 			<div class="collapse navbar-collapse" id="navbarNav">
 			<ul class="navbar-nav">
 				<% if (session.userId != undefined) { %>
-					<li class="nav-item active">
+					<li class="nav-item active scroll-to" data-scroll="section.tasks">
 						<a class="nav-link" href="#">Tasks <span class="sr-only">(current)</span></a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item scroll-to" data-scroll="section.trackers">
 						<a class="nav-link" href="#">Trackers</a>
 					</li>
-					<li class="nav-item">
+					<li class="nav-item scroll-to" data-scroll="section.log">
 						<a class="nav-link" href="#">Log</a>
 					</li>
 				<% } else { %>
@@ -49,7 +49,7 @@
 			<ul class="navbar-nav justify-content-end ml-auto">
 				<% if (session.userId != undefined) { %>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Settings</a>
+						<a class="nav-link" href="#">Chatbot</a>
 					</li>
 					<a class="btn ml-md-3" href="/user/logout">Log Out</a>
 				<% } %>

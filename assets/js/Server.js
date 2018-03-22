@@ -219,40 +219,6 @@ $("html").on("click touch", ".login-btn", function() {
 
 })
 
-// Triggers actions on input enter
-$("input").on('keyup', function (e) {
-
-    if ( (e.keyCode == 13) && ($(this).hasClass("on-enter")) ) {
-
-    	var action = $(this).attr("data-enter");
-
-    	switch(action) {
-
-    		case "trigger":
-    			console.log("trigger");
-    			var $element = $(this).attr("data-trigger");
-    			$element = $($element).first();
-    			$element.trigger("click");
-    			break;
-
-    		default:
-    			console.log("Unkown action");
-    			break;
-
-    	}
-
-    }
-
-	if ( (e.keyCode == 13) && ($(this).hasClass("add-note")) ) {
-
-		var note = $(this).val();
-		cl('adding note', note);
-		$(this).val('');
-
-	}
-
-});
-
 // Disables submit buttons on click until server respons to prevent multiple form submissions
 $("html").on("click touch", ".submit-btn", function(e) {
 

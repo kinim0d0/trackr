@@ -1,7 +1,8 @@
 body[data-page="home"] {
-	
+
 	section.intro {
 		background-image: linear-gradient(135deg,#172a74,#21a9af);
+		min-height: 0px;
 
 		.app-logo {
 			margin-top: 5em;
@@ -29,7 +30,7 @@ body[data-page="home"] {
 					text-align: right;
 					color: white;
 					margin: 0;
-					padding-right: 42px;
+					padding-right: 0;
 				}
 
 				h2 {
@@ -51,6 +52,7 @@ body[data-page="home"] {
 					right: 0px;
 					margin: 3px 0px;
 					font-size: 32px;
+					display: none;
 				}
 
 			}
@@ -60,11 +62,29 @@ body[data-page="home"] {
 	}
 
 	section.features {
+		background-color: whitesmoke;
+
+		img {
+			width: 160px;
+		}
 
 	}
 
 	section.features-mobile {
-		background-color: whitesmoke;
+		background-color: white;
+
+		img.chatbot-demo {
+			position: absolute;
+			top: -140px;
+			left: 0px;
+			transform: scale(1.35);
+		}
+
+		.row {
+			padding-bottom: 1em !important;
+			padding-top: 1em !important;
+		}
+
 	}
 
 	section.cta {

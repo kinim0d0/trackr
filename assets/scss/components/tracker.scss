@@ -1,6 +1,6 @@
 @import '../colors.scss';
 
-.tracker-container, .timeline{
+.tracker-container, .timeline, .features{
 
 	.tracker {
 		margin: 0em 0em 3em 0em;
@@ -51,7 +51,7 @@
 				transition: opacity 0.3s;
 			}
 
-			&.active {
+			&.active, &.active-dummy {
 				animation: pulse 4s infinite;
 				border: 8px solid rgba(0,0,0,0.2);
 
