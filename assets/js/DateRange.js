@@ -11,10 +11,48 @@ class Timeline {
 
     }
 
+    reloadCharts() {
+
+        var ctx = document.getElementById('main-chart').getContext('2d');
+        var myPieChart = new Chart(ctx,{
+            type: 'pie',
+            data: {
+                datasets: [{
+                    data: [10, 25, 30],
+                    backgroundColor: ['#FFDD5C', '#76A665', '#928181']
+                }],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: [
+                    'Work',
+                    'Study',
+                    'Movies'
+                ]
+            },
+            options: {
+                segmentShowStroke : true,
+                segmentStrokeColor : "#fff",
+                segmentStrokeWidth : 2,
+                percentageInnerCutout : 50,
+                animationSteps : 100,
+                animationEasing : "easeOutBounce",
+                animateRotate : true,
+                animateScale : false,
+                responsive: true,
+                maintainAspectRatio: true,
+                showScale: true
+            }
+        });
+
+    }
+
     updateTimelineDate(dateFrom, dateTo) {
 
         var $singleRange = $('.date-range .single-range');
         var $multiRange = $('.date-range .multi-range');
+
+        var $multiDaySections = $('section.stats, section.tracker-stats, section.task-stats');
+        var $singleDaySections = $('section.trackers, section.tasks')
 
         if (typeof dateFrom == 'string') {
 
@@ -45,7 +83,17 @@ class Timeline {
             $multiRange.find('.month').text(dateTo.format("MMMM"));
             $multiRange.find('.year').text(dateTo.year())
 
-            $('.date-range').addClass("multi")
+            $('.date-range').addClass("multi");
+
+            $multiDaySections.removeClass('hide')
+            $singleDaySections.addClass('hide')
+
+            timeline.reloadCharts();
+
+        } else {
+
+            $multiDaySections.addClass('hide')
+            $singleDaySections.removeClass('hide')
 
         }
 
@@ -89,6 +137,14 @@ $("html").on("click touch", ".applyBtn", function (e) {
 
 })
 
+$("html").on("click touch", ".back-to-day", function (e) {
+
+    e.stopImmediatePropagation();
+
+    timeline.updateTimelineDate(moment())
+
+})
+
 $(window).scroll(function() {
 
 	var currentScroll = $(this).scrollTop();
@@ -101,3 +157,8 @@ $(window).scroll(function() {
 	}
 
 });
+
+$(document).ready(function() {
+
+
+})

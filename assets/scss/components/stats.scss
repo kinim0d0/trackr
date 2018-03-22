@@ -1,0 +1,41 @@
+section.stats {
+
+    .charts {
+        padding: 3em 0em;
+
+        .chart {
+            display: inline-block;
+            left: 50%;
+            position: relative;
+            transform: translate(-50%, 0);
+        }
+
+    }
+
+}
+
+section.task-stats,
+section.tracker-stats
+{
+
+    .counter {
+        margin: 3em 0;
+
+        .name {
+            margin: 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+
+        .number {
+            margin: 0;
+            text-align: center;
+            font-size: 3em;
+            line-height: 1;
+            font-weight: 500;
+        }
+
+    }
+
+}

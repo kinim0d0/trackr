@@ -18,7 +18,8 @@ gulp.task('scripts', function () {
 			"globals": {
 				"$": true,
 				"io": true,
-				"moment": true
+				"moment": true,
+				"Chart": true
 			}
 		}))
 		.pipe(gulp.dest('assets/public/js'));

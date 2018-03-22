@@ -49,20 +49,42 @@
 
 		&.multi-range {
 			position: relative;
-			margin-left: 1em;
+			margin-left: 2em;
 
 			.separator {
 				position:  absolute;
 				font-size:  5em;
-				left: -52px;
+				left: -36px;
 				top: 0px;
+				font-weight: 300;
+				transform: rotate(120deg);
 			}
 
 		}
 
 	}
 
+	.back-to-day {
+		display: none;
+		position: absolute;
+		left: 0;
+		top: 48px;
+		padding-left: 16px;
+		font-weight: 700;
+	    text-transform: uppercase;
+
+		svg {
+			display: inline-block;
+			position: absolute;
+			top: 3px;
+			font-size: 1em;
+			left: 0;
+		}
+
+	}
+
 	&.multi {
+		padding: 0em 0em 0em 130px;
 
 		div:not(.tracker) {
 			width: 120px;
@@ -71,6 +93,18 @@
 				display: inline-block;
 			}
 
+		}
+
+		.next-day, .prev-day {
+			display: none;
+		}
+
+		.back-to-day {
+			display: inline-block;
+		}
+
+		&:hover {
+			padding: 0em 0em 0em 130px;
 		}
 
 	}
