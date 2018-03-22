@@ -63,10 +63,20 @@ app.get("/dashboard*", function(req, res) {
 })
 
 app.get("/", function(req, res) {
-  res.render('index', {
-    section: 'home',
-    session: req.session
-  })
+
+    if (req.session.userId != undefined) {
+
+      res.redirect("/dashboard");
+
+    } else {
+
+        res.render('index', {
+          section: 'home',
+          session: req.session
+        })
+
+    }
+
 })
 
 var UserController = require('./controller/User');

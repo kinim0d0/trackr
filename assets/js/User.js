@@ -14,3 +14,8 @@ $h.on("click touch", ".login-modal-open-btn", function() {
 $h.on('click touch', '#login-close', function(e) {
     $("#login-wrapper").toggleClass("hide");
 })
+
+// Clears password fields on email field change
+$h.on("change", "#email", function() {
+    $('#password, £password-again').val("");
+})
