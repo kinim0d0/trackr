@@ -70,6 +70,14 @@ $("html").on("click touch", ".date-range .next-day, .date-range .prev-day", func
 
 });
 
+$("html").on("click touch", ".date-range .tracker", function (e) {
+
+    e.stopImmediatePropagation();
+
+   $(this).find('.add-note').focus();
+
+});
+
 $("html").on("click touch", ".applyBtn", function (e) {
 
     var range = $('#daterange').val();
@@ -77,14 +85,7 @@ $("html").on("click touch", ".applyBtn", function (e) {
     var fromDate = range.substr(0, 10);
     var toDate = range.substr(13, 23);
 
-
-    cl(fromDate, toDate, fromDate == toDate)
-
-    if (fromDate == toDate) {
-        timeline.updateTimelineDate(fromDate)
-    } else {
-        timeline.updateTimelineDate(fromDate, toDate)
-    }
+    timeline.updateTimelineDate(fromDate, toDate)
 
 })
 

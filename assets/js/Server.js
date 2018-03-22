@@ -243,6 +243,14 @@ $("input").on('keyup', function (e) {
 
     }
 
+	if ( (e.keyCode == 13) && ($(this).hasClass("add-note")) ) {
+
+		var note = $(this).val();
+		cl('adding note', note);
+		$(this).val('');
+
+	}
+
 });
 
 // Disables submit buttons on click until server respons to prevent multiple form submissions

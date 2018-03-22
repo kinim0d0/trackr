@@ -343,6 +343,10 @@ $("html").on("click touch", ".tracker .inner", function() {
 
     var $this = $(this);
 
+    if ($this.parent().hasClass('disabled')) {
+        return
+    }
+
     if ($this.hasClass("active")) {
         $this.removeClass("active");
     } else {

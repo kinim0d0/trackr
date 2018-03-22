@@ -1,9 +1,9 @@
 @import '../colors.scss';
 
 .task-container {
-	
+
 	.task {
-		margin: 0em 0em 2em 0em;
+		margin: 0em 0em 4em 0em;
 
 		.inner {
 			width: 200px;
@@ -13,53 +13,80 @@
 			margin: auto;
 
 			@mixin circle($size) {
-			  content: "";
-			  position: absolute;
-			  border-radius: 50%;
-			  left: calc(50% - #{$size/2});
-			  top: calc(50% - #{$size/2});
-			  width: $size;
-			  height: $size;
+				content: "";
+				position: absolute;
+				border-radius: 50%;
+				left: calc(50% - #{$size/2});
+				top: calc(50% - #{$size/2});
+				width: $size;
+				height: $size;
 			}
 
 			$size: 200px;
+
 			.progress-pie-chart {
-			  width: $size;
-			  height: $size;
-			  border-radius: 50%;
-			  background-color: #E5E5E5;
-			  position: relative;
+				width: $size;
+				height: $size;
+				border-radius: 50%;
+				background-color: #E5E5E5;
+				position: relative;
 			}
+
 			.ppc-progress {
-			  @include circle($size);
-			  clip: rect(0, $size, $size, #{$size/2});
-			  .ppc-progress-fill {
-			    @include circle($size);
-			    clip: rect(0, #{$size/2}, $size, 0);
-			    transform: rotate(60deg);
-			  }
-			  .gt-50 & {
-			    clip: rect(0, #{$size/2}, $size, 0);
-			    .ppc-progress-fill {
-			      clip: rect(0, $size, $size, #{$size/2});
-			      background: #E5E5E5;
-			    }
-			  }
+
+				@include circle($size);
+				clip: rect(0, $size, $size, #{$size/2});
+
+				.ppc-progress-fill {
+					@include circle($size);
+					clip: rect(0, #{$size/2}, $size, 0);
+					transform: rotate(60deg);
+				}
+
+				.gt-50 & {
+					clip: rect(0, #{$size/2}, $size, 0);
+
+					.ppc-progress-fill {
+						clip: rect(0, $size, $size, #{$size/2});
+						background: #E5E5E5;
+					}
+
+				}
+
 			}
+
 			.ppc-percents {
-			  @include circle(#{$size/1.15});
-			  background: whitesmoke;
-			  text-align: center;
-			  display: table;
-			  span {
-			    display: block;
-			    font-size: 2.6em;
-			    font-weight: bold;
-			  }
+				@include circle(#{$size/1.15});
+				background: whitesmoke;
+				text-align: center;
+				display: table;
+
+				span {
+					display: block;
+					font-size: 2.6em;
+					font-weight: bold;
+				}
+
 			}
+
 			.pcc-percents-wrapper {
-			  display: table-cell;
-			  vertical-align: middle;
+				display: table-cell;
+				vertical-align: middle;
+
+				span {
+
+					&:nth-child(1) {
+						font-weight: 400;
+						font-size: 2em;
+					}
+
+					&:nth-child(2) {
+						font-weight: 500;
+						font-size: 2.4em;
+					}
+
+				}
+
 			}
 
 		}
@@ -69,16 +96,49 @@
 }
 
 .task[data-color='red'] {
-	
-	.progress-pie-chart.gt-50 {
-		background-color: $red;
-	}
+	.progress-pie-chart.gt-50 { background-color: $red; }
+	.ppc-progress-fill { background: $red; }
+	.ppc-percents span { color: $red; }
+}
 
-	.ppc-progress-fill {
-		background: $red;
-	}
-	.ppc-percents span {
-		color: $red;
-	}
+.task[data-color='pink'] {
+	.progress-pie-chart.gt-50 { background-color: $pink; }
+	.ppc-progress-fill { background: $pink; }
+	.ppc-percents span { color: $pink; }
+}
 
+.task[data-color='yellow'] {
+	.progress-pie-chart.gt-50 { background-color: $yellow; }
+	.ppc-progress-fill { background: $yellow; }
+	.ppc-percents span { color: $yellow; }
+}
+
+.task[data-color='orange'] {
+	.progress-pie-chart.gt-50 { background-color: $orange; }
+	.ppc-progress-fill { background: $orange; }
+	.ppc-percents span { color: $orange; }
+}
+
+.task[data-color='green'] {
+	.progress-pie-chart.gt-50 { background-color: $green; }
+	.ppc-progress-fill { background: $green; }
+	.ppc-percents span { color: $green; }
+}
+
+.task[data-color='blue'] {
+	.progress-pie-chart.gt-50 { background-color: $blue; }
+	.ppc-progress-fill { background: $blue; }
+	.ppc-percents span { color: $blue; }
+}
+
+.task[data-color='purple'] {
+	.progress-pie-chart.gt-50 { background-color: $purple; }
+	.ppc-progress-fill { background: $purple; }
+	.ppc-percents span { color: $purple; }
+}
+
+.task[data-color='grey'] {
+	.progress-pie-chart.gt-50 { background-color: $grey; }
+	.ppc-progress-fill { background: $grey; }
+	.ppc-percents span { color: $grey; }
 }

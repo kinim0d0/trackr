@@ -3,8 +3,10 @@
 .date-range {
 	cursor: pointer;
 	position: relative;
+	padding: 0em 0em;
+	transition: padding 0.3s;
 
-	div {
+	div:not(.tracker) {
 		display: inline-block;
 		font-family: 'Quicksand';
 		width: 250px;
@@ -46,12 +48,14 @@
 		}
 
 		&.multi-range {
+			position: relative;
+			margin-left: 1em;
 
 			.separator {
 				position:  absolute;
 				font-size:  5em;
-				left: 80px;
-				top: -30px;
+				left: -52px;
+				top: 0px;
 			}
 
 		}
@@ -60,7 +64,7 @@
 
 	&.multi {
 
-		div {
+		div:not(.tracker) {
 			width: 120px;
 
 			.month, .year {
@@ -81,14 +85,65 @@
 	svg {
 		position: absolute;
 		font-size: 1.6em;
-		top: 30px;
+		top: 44px;
+		display: none;
 
 		&.prev-day {
-			left: -30px;
+			left: 0px;
 		}
 
 		&.next-day {
-			right: 30px;
+			right: 0px;
+		}
+
+	}
+
+	.tracker {
+		display: inline-block;
+		margin: 0 !important;
+		float: right;
+
+		.inner {
+			width: 200px !important;
+			height: 120px !important;
+			position: relative;
+
+			.name {
+				font-size: 1.6em !important;
+				padding: 0 12px !important;
+				height: auto !important;
+				font-weight: 500;
+				text-align: left !important;
+			}
+
+			.time {
+				height: auto !important;
+				font-size: 2em !important;
+				text-align: left !important;
+				padding: 0 12px !important;
+				line-height: 1 !important;
+			}
+
+			.add-note {
+				border-radius: 0 0 12px 12px;
+			    border: navajowhite;
+			    width: 100%;
+			    background-color: rgba(0, 0, 0, 0.2);
+			    position: absolute;
+			    bottom: 0;
+			    left: 0px;
+				padding: 4px 12px;
+			}
+
+		}
+
+	}
+
+	&:hover {
+		padding: 0em 3em;
+
+		svg {
+			display: inline-block;
 		}
 
 	}
