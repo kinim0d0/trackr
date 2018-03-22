@@ -3,6 +3,17 @@
 nav.navbar {
 	padding: 24px 12px;
 	background-color: $whitesmoke;
+
+	.dropdown-toggle {
+		border: none;
+		background: transparent;
+		cursor: pointer;
+	}
+
+	.dropdown-menu {
+		top: 64px;
+	}
+
 }
 
 body[data-page="home"] {

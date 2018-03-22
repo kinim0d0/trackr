@@ -55,7 +55,7 @@ class Task {
         var taskName = "";
         var taskColor = "red";
 
-        $('.dropdown-menu').remove();
+        $('.dropdown-menu:not(.permanent)').remove();
 
         $this
         .append('\

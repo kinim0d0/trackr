@@ -3,7 +3,6 @@
 <html>
 
 <head>
-
 	<title>Home</title>
 	<link rel="stylesheet" href="css/externals.min.css">
 	<link rel="stylesheet" href="css/main.min.css">
@@ -49,7 +48,16 @@
 			<ul class="navbar-nav justify-content-end ml-auto">
 				<% if (session.userId != undefined) { %>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Chatbot</a>
+						<div class="dropdown">
+							<button class="nav-link dropdown-toggle" id="dropdownMenuButton2" aria-haspopup="true" aria-expanded="false">
+							Chatbot
+							</button>
+						    <div class="dropdown-menu permanent" aria-labelledby="dropdownMenuButton">
+								<h2>Chatbot</h2>
+								<p>Connect to Facebook so you can track your time conveniently on the go</p>
+								<p>Coming soon</p>
+							</div>
+						</div>
 					</li>
 					<a class="btn ml-md-3" href="/user/logout">Log Out</a>
 				<% } %>

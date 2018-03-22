@@ -285,7 +285,7 @@ class Tracker {
             $this = $this.find('.dropdown');
         }
 
-        $('.dropdown-menu').remove();
+        $('.dropdown-menu:not(.permanent)').remove();
 
         $this
         .append('\
