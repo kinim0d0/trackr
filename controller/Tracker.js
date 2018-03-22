@@ -45,7 +45,7 @@ router.route('/edit')
 
         } else {
 
-            if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+            //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
             Tracker.findByLocalId({localId: tracker.localId, userId: req.session.userId}, function(err, trackers) {
 
@@ -130,7 +130,7 @@ router.route('/edit')
 
             console.log(timer)
 
-            if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+            //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
             Tracker.findByLocalId({localId: timer.trackerId, userId: req.session.userId}, function(err, trackers) {
 

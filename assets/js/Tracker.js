@@ -337,6 +337,9 @@ class Tracker {
                 //$this.find(data["error"].field).first().after("<p class='server-error'>" + data["error"].msg + "</p>");
             }
 
+            // Until socket io is not working
+            server.sync()
+
         })
 
     }

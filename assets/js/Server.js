@@ -146,6 +146,8 @@ class Server {
 	 */
 	connectToSocket() {
 
+		return;
+
 		if (server.socketConnection == true) {
 			return;
 		}

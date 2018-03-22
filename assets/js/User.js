@@ -11,6 +11,6 @@ $h.on("click touch", ".login-modal-open-btn", function() {
 })
 
 // Closes the login-signup wrapper
-$h.on('click touch', '#login-wrapper', function(e) {
+$h.on('click touch', '#login-close', function(e) {
     $("#login-wrapper").toggleClass("hide");
 })
