@@ -1,14 +1,12 @@
 class Server {
 
 	/**
-	 *	@param {String} url of the api
-	 *	@param {Object} data in the $_POST var
-	 *	@param {Object} function to call when request completed
+	 *	@param {String} url  url of the api
+	 *	@param {Object} data  data in the req.body var
+	 *	@param {Object} function  the function to call when the request is completed
 	 *
-	 *  Sends an api request
+	 *  Sends an api request to the server
 	 */
-
-
 	api(url, data, callback) {
 
 		$(".server-error").remove();
@@ -66,20 +64,15 @@ class Server {
 	}
 
 	/**
-	 *	Returns a $_GET attribute from the document's body
-	 *
-	 *  @param {String} name name of the data attribute
-	 *
-	 *  @returns {String}
+	 *	Starts a sync when the browser loaded
 	 */
-	getParam(name) {
-		return $("body").attr("data-" + name);
-	}
-
 	init() {
 		this.sync()
 	}
 
+	/**
+	 *	Syncs the client's data with the database
+	 */
 	sync() {
 
 		if (storage.state == undefined) {
@@ -95,6 +88,12 @@ class Server {
 
 	}
 
+	/**
+	 *	Callback to sync, saves new data to localStorage
+	 *
+	 *  @param {Boolean} err  hasErrorOccured
+	 *  @param {Object} data  Object  new data
+	 */
 	syncEnd(err, data) {
 
 		var updates = data.log;
@@ -135,10 +134,16 @@ class Server {
 
 	}
 
+	/**
+	 *	Initializes a server object
+	 */
 	constructor() {
         this.socketConnection = false;
 	}
 
+	/**
+	 *	Attempts to connect to socket.IO
+	 */
 	connectToSocket() {
 
 		if (server.socketConnection == true) {
@@ -219,7 +224,7 @@ $("html").on("click touch", ".login-btn", function() {
 
 })
 
-// Disables submit buttons on click until server respons to prevent multiple form submissions
+// Disables submit buttons on click until server respons to prevent multiple api requests for the same url
 $("html").on("click touch", ".submit-btn", function(e) {
 
 	if ($(this).hasClass("disabled")) {

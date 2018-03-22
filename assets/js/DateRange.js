@@ -13,26 +13,33 @@ class Timeline {
 
     }
 
+    /**
+     *  Reloads the charts with the data in the current range
+     */
     reloadCharts() {
 
         setTimeout(function() {
 
-            var ctx = document.getElementById('main-chart').getContext('2d');
+            var ctx = $('#main-chart')[0].getContext('2d');
+
             var myPieChart = new Chart(ctx,{
+
                 type: 'pie',
                 data: {
+
                     datasets: [{
                         data: [10, 25, 30],
                         backgroundColor: ['#FFDD5C', '#76A665', '#928181']
                     }],
 
-                    // These labels appear in the legend and in the tooltips when hovering different arcs
                     labels: [
                         'Work',
                         'Study',
                         'Movies'
                     ]
+
                 },
+
                 options: {
                     segmentShowStroke : true,
                     segmentStrokeColor : "#fff",
@@ -46,12 +53,19 @@ class Timeline {
                     maintainAspectRatio: true,
                     showScale: true
                 }
+
             });
 
-        }, 300)
+        }, 200)
 
     }
 
+    /**
+     *  @param {String|Date} dateFrom  the range's start date
+     *  @param {String|Date} dateTo  the range's end date
+     *
+     *  Upldates statistics based on the current date range
+     */
     updateTimelineDate(dateFrom, dateTo) {
 
         var $singleRange = $('.date-range .single-range');
@@ -112,30 +126,14 @@ class Timeline {
 
 var timeline = new Timeline();
 
-// Triggers actions on input enter
+// Triggers the date-range picker on range header click
 $("html").on("click touch", ".date-range", function (e) {
 
    $("#daterange").focus();
 
 });
 
-$("html").on("click touch", ".date-range .next-day, .date-range .prev-day", function (e) {
-
-    e.stopImmediatePropagation();
-
-    var dateFrom = timeline.currentDateFrom;
-    var dateTo = timeline.currentDateTo;
-
-   if ($(this).hasClass('.prev-day')) {
-       dateFrom = dateFrom.add(-1, 'day');
-   } else {
-       dateTo = dateTo.add(1, 'day');
-   }
-
-   timeline.updateTimelineDate(dateFrom, dateTo)
-
-});
-
+// Focuses on the add note to timer input element
 $("html").on("click touch", ".date-range .tracker", function (e) {
 
     e.stopImmediatePropagation();
@@ -144,6 +142,7 @@ $("html").on("click touch", ".date-range .tracker", function (e) {
 
 });
 
+// Gets and passes the date range to the updateTimelineDate function
 $("html").on("click touch", ".applyBtn", function (e) {
 
     var range = $('#daterange').val();
@@ -155,6 +154,7 @@ $("html").on("click touch", ".applyBtn", function (e) {
 
 })
 
+// Resets the date range to today's day view
 $("html").on("click touch", ".back-to-day", function (e) {
 
     e.stopImmediatePropagation();
@@ -163,11 +163,13 @@ $("html").on("click touch", ".back-to-day", function (e) {
 
 })
 
+// Event triggered when the window is scrolled
 $(window).scroll(function() {
 
 	var currentScroll = $(this).scrollTop();
 	var offset = 100;
 
+    // Makes the date range header fixed when the user scrolled down 100 pixels
 	if (currentScroll > offset) {
 		$("body").attr('data-timeline', 'sticky');
 	} else {

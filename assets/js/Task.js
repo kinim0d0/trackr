@@ -1,9 +1,17 @@
 class Task {
 
+    /**
+     *  Initializes a Task object
+     */
     constructor() {
         this.reloadList();
     }
 
+    /**
+     *  @param {Object} data  task
+     *
+     *  Renders a task element
+     */
     render(data) {
 
         $('.task-container').append('\
@@ -36,6 +44,11 @@ class Task {
 
     }
 
+    /**
+     *  @param {Object} $this  The element to add the dropdown to
+     *
+     *  Appends a dropdown to the given task
+     */
     renderEditModal($this) {
 
         var dropdownTitle = "Add a task";
@@ -73,6 +86,9 @@ class Task {
 
     }
 
+    /**
+     *  Reloads all the tasks
+     */
     reloadList() {
 
         var todos = [
@@ -162,6 +178,7 @@ class Task {
 
 }
 
+// Toggles the dropdown for a task
 $h.on('click touch', '.task-dropdown-toggle', function(e) {
 
     e.stopImmediatePropagation();
@@ -172,10 +189,8 @@ $h.on('click touch', '.task-dropdown-toggle', function(e) {
 
 })
 
-$h.on('click touch', '.save-task-btn', function(e) {
+/*$h.on('click touch', '.save-task-btn', function(e) {
 
-
-
-})
+})*/
 
 var task = new Task();

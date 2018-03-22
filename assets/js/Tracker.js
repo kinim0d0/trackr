@@ -6,9 +6,9 @@ class Tracker {
 	}
 
     /**
-     *  @param {String} Enviroment
+     *  @param {String} localId  localId of the tracker
      *
-     *  Toggles a tracker
+     *  Toggles a tracker's state
      */
     toggle(localId) {
 
@@ -32,6 +32,11 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {String} localId  localId of the tracker
+     *
+     *  Creates a timer
+     */
     createTimer(localId) {
 
         cl('starting: ' + localId);
@@ -51,6 +56,12 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {String} localId  localId of the tracker
+     *  @param {Object} localId  timer
+     *
+     *  Saves a timer
+     */
     saveTimer(localId, timer) {
 
         var daysSinceEpoch = timer.day;
@@ -90,6 +101,11 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {Object} timer  timer
+     *
+     *  Saves a timer to the localStorage
+     */
     saveTimerToLocal(timer) {
 
         cl('saving to local timer', timer);
@@ -100,6 +116,11 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {String} localId  localId of the timer
+     *
+     *  Stops a timer, rewriting the current timer with an end date
+     */
     stopTimer(localId) {
 
         console.log('Stopping: ');
@@ -124,6 +145,9 @@ class Tracker {
 
     }
 
+    /**
+     *  Starts a timer (when it was started by someone else, or browser reloaded)
+     */
     startTimer() {
 
         cl('start timer ()')
@@ -155,8 +179,11 @@ class Tracker {
 
     }
 
-    //TODO render on blur and focus
-
+    /**
+     *  @param {Object} tracker  tracker
+     *
+     *  Renders a tracker element
+     */
     render(data) {
 
         if (data == undefined) {
@@ -175,6 +202,9 @@ class Tracker {
 
     }
 
+    /**
+     *  Reloads all the trackers
+     */
     reloadList() {
 
         if (storage.trackers == undefined) {
@@ -227,12 +257,19 @@ class Tracker {
 
     }
 
+    /**
+     *  Runs when the browser is loaded
+     */
     init() {
-
         this.reloadList();
-
     }
 
+    /**
+     *  @param {Object} $this  The element to add the dropdown to
+     *  @param {String} localId  localId of the tracker
+     *
+     *  Appends a dropdown to the given element
+     */
     renderEditModal($this, localId) {
 
         var dropdownTitle = "Add a tracker";
@@ -279,6 +316,11 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {Object} data  tracker
+     *
+     *  Saves a tracker to localStorage and to the database
+     */
     save(data) {
 
         this.saveToLocal(data);
@@ -299,6 +341,11 @@ class Tracker {
 
     }
 
+    /**
+     *  @param {Object} data  tracker
+     *
+     *  Saves a tracker to localStorage
+     */
     saveToLocal(data) {
 
         if (storage.trackers == null) {
@@ -339,6 +386,7 @@ class Tracker {
 
 var tracker = new Tracker;
 
+// Triggers the state of a tracker
 $("html").on("click touch", ".tracker .inner", function() {
 
     var $this = $(this);
@@ -357,6 +405,7 @@ $("html").on("click touch", ".tracker .inner", function() {
 
 })
 
+// Changes the selected color for the tracker
 $h.on("click touch", ".color-picker .color", function() {
 
     var $this = $(this);
@@ -370,6 +419,7 @@ $h.on("click touch", ".color-picker .color", function() {
 
 })
 
+// Calls the tracker save function to save the tracker
 $h.on("click touch", ".save-tracker-btn", function() {
 
     var $this = $(this).parent().parent();
@@ -397,6 +447,7 @@ $h.on("click touch", ".save-tracker-btn", function() {
 
 })
 
+// Passes the element to add the dropdown to to the renderEditModal function
 $h.on('click touch', '.tracker-dropdown-toggle', function(e) {
 
     e.stopImmediatePropagation();

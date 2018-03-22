@@ -2,6 +2,11 @@ class Log {
 
 }
 
+/**
+ *	@param {Object} e  Element to trigger the contenteditable on
+ *
+ *  Toggles the contenteditable attribute on an element
+ */
 function toggleContentEditable(e) {
     var a = 'contenteditable';
     var v= e.attr(a);
@@ -9,22 +14,17 @@ function toggleContentEditable(e) {
     if (!v) e.focus();
 }
 
+// Passes an element to the toggleContentEditable function
 $h.on('click touch', '.edit-timer', function(e) {
-
-    var $this = $(this);
-
-    toggleContentEditable($this.parent().find('.title'))
-
+    toggleContentEditable($(this).parent().find('.title'))
 })
 
+// Passes an element to the toggleContentEditable function
 $h.on('click touch', '.edit-note', function(e) {
-
-    var $this = $(this);
-
-    toggleContentEditable($this.parent().find('.description'))
-
+    toggleContentEditable($(this).parent().find('.description'))
 })
 
+// Adds a note element to a timer and focuses on the description element
 $h.on('click touch', '.add-note-to-timer', function(e) {
 
     var $this = $(this);

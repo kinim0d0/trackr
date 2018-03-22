@@ -1,7 +1,7 @@
 class App {
 
     /**
-     *  @param {String} Enviroment
+     *  @param {String} Environment
      *
      *  Initializes the app
      */
@@ -59,7 +59,3 @@ $("html").on("keyup", "input", function (e) {
     }
 
 });
-
-$("html").on("click touch", ".dropdown-toggle", function() {
-    $(this).parent().toggleClass("show");
-})

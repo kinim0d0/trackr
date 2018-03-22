@@ -22,7 +22,10 @@ function Storage() {
 
 }
 
-Storage.prototype.init = function(key) {
+/**
+ *	Loads the content of localStorage to memory
+ */
+Storage.prototype.init = function() {
 
 	storage.user = JSON.parse(localStorage.getItem("user"));
 	storage.state = JSON.parse(localStorage.getItem("state"));
@@ -31,6 +34,9 @@ Storage.prototype.init = function(key) {
 
 }
 
+/**
+ *	Loads the content of the momory into localStorage
+ */
 Storage.prototype.saveState = function() {
 
 	localStorage.setItem("user", JSON.stringify(storage.user));
@@ -40,6 +46,9 @@ Storage.prototype.saveState = function() {
 
 }
 
+/**
+ *	Erases localStorage
+ */
 Storage.prototype.destroy = function() {
 
 	window.localStorage.clear();

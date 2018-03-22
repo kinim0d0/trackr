@@ -14,6 +14,7 @@ class Interface {
 
 var interface = new Interface();
 
+// Scrolls to an element
 $("html").on("click touch", ".scroll-to", function() { interface.scrollTo( $(this).attr("data-scroll") ) })
 
 // Triggers actions on input enter
@@ -49,3 +50,8 @@ $("input").on('keyup', function (e) {
 	}
 
 });
+
+// Toggles a dropdown
+$("html").on("click touch", ".dropdown-toggle", function() {
+    $(this).parent().toggleClass("show");
+})
