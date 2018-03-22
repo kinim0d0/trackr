@@ -1,13 +1,15 @@
 class Interface {
 
 	/**
-	 *	@param {String} selector Element to scroll to
+	 *	@param {String} selector  Element to scroll to
+	 *	@param {Boolean} noOffset  scrolls to the element without any offset
 	 *
 	 *  Animated scroll to an element
 	 */
-	scrollTo(selector) {
-		console.log(selector);
-		$("html, body").animate({ scrollTop: $(selector).offset().top - 200 }, 400);
+	scrollTo(selector, noOffset) {
+		var offset = 200
+		if (noOffset) offset = 0
+		$("html, body").animate({ scrollTop: $(selector).offset().top - offset }, 400);
 	}
 
 }
@@ -15,7 +17,9 @@ class Interface {
 var interface = new Interface();
 
 // Scrolls to an element
-$("html").on("click touch", ".scroll-to", function() { interface.scrollTo( $(this).attr("data-scroll") ) })
+$("html").on("click touch", ".scroll-to", function() {
+	interface.scrollTo( $(this).attr("data-scroll"), $(this).hasClass("no-offset") )
+})
 
 // Triggers actions on input enter
 $("input").on('keyup', function (e) {
