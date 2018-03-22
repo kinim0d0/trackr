@@ -187,45 +187,6 @@ class Server {
 
 var server = new Server();
 
-//Sends an api request to log the user in
-$("html").on("click touch", ".login-btn", function() {
-
-	var fields = {
-		email: $("#email").val(),
-		password: $("#password").val(),
-		passwordAgain: $("#password-again").val()
-	};
-
-	server.api("/user/login", fields, function(success, data) {
-
-		success = data["success"];
-
-		$(".password-group").addClass("hide");
-
-		if (success == true) {
-
-			if (data.data.view == "loggedIn") {
-				location.href = "/dashboard";
-			} else if (data.data.view == "signup") {
-				$(".password-group").removeClass("hide");
-			} if (data.data.view == "login") {
-				$(".password-group:not(.password-again)").removeClass("hide");
-			}
-
-			$("#password").focus();
-
-		} else {
-
-			if (data.error != undefined) {
-				$(data.error.field).parent().append("<label class='error-msg'>" + data.error.msg + "</label>");
-			}
-
-		}
-
-	});
-
-})
-
 // Disables submit buttons on click until server respons to prevent multiple api requests for the same url
 $("html").on("click touch", ".submit-btn", function(e) {
 
