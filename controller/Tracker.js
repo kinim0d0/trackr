@@ -19,6 +19,7 @@ router.route('/addNewTimer')
 
         var trackerId = req.body.trackerId;
         var day = daysFromEpoch();
+        var timerId = req.body.localId
 
         console.log(trackerId, day, '----')
 
@@ -39,12 +40,14 @@ router.route('/addNewTimer')
 
             trackerDay.push({
                 start: Date.now(),
-                end: null
+                end: null,
+                localId: timerId,
+                day: day
             })
 
             tracker.days[day] = trackerDay;
             tracker.markModified('days');
-            //tracker.markModified('days.' + day);
+            //racker.markModified('days.' + day);
 
             console.log(trackerDay);
 
@@ -64,6 +67,61 @@ router.route('/addNewTimer')
         })
 
     })
+
+    router.route('/stopTimer')
+
+        .post(function(req, res) {
+
+            var trackerId = req.body.trackerId;
+            var day = req.body.timer.day;
+            var timerId = req.body.timer.localId;
+
+            console.log(trackerId, req.body.timer, '----')
+
+            Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+                if (err) console.log(err);
+
+                var trackerDay = [];
+
+                var tracker = trackers[0];
+
+                console.log('tracker: ', tracker, day);
+
+                if (typeof tracker.days[day] != 'undefined') {
+                    // Creating a day container
+                    trackerDay = tracker.days[day];
+                }
+
+                console.log('collection of the timers day: ', trackerDay);
+
+                var timer = undefined;
+
+                for (var i = 0; i < trackerDay.length; i++) {
+                    if (trackerDay[i].localId == timerId) {
+                        trackerDay[i].end = Date.now();
+                    }
+                }
+
+                tracker.days[day] = trackerDay;
+                tracker.markModified('days');
+
+                console.log('final: ', tracker);
+
+                tracker.save(req, function(err, data) {
+
+                    if (err) console.log('failed to save new timer', err);
+
+                })
+
+                res.send({
+                    success: true,
+                    data: 'timer stopped'
+                });
+
+            })
+
+        })
 
 
 router.route('/edit')

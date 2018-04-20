@@ -17,18 +17,33 @@ class Tracker {
 
         var $this = $('.tracker[data-id="' + localId + '"] .inner');
 
-        server.api('/tracker/addNewTimer', {
-            trackerId: localId
-        }, function(success, data) {
-            cl('timer added', success, data);
-        })
+        if ($this.hasClass('active')) {
+
+            // Stopping an already active trackers
+
+            server.api('/tracker/stopTimer', {
+                trackerId: localId,
+                timer: tracker.currentTimer
+            }, function(success, data) {
+                cl('timer stopped', success, data);
+                server.init();
+            })
+
+        } else {
+
+            // Starting a new timer
+
+            server.api('/tracker/addNewTimer', {
+                trackerId: localId,
+                localId: "TI" + utilities.generateLocalId()
+            }, function(success, data) {
+                cl('timer added', success, data);
+                server.init();
+            })
+
+        }
 
         return;
-
-
-
-
-
 
         // Runs if there is a running timer, it saves the running timer
         if (tracker.runningTimer != null) {
@@ -211,20 +226,72 @@ class Tracker {
 
     }
 
+    renderRunningTimestamp() {
+
+        if (tracker.currentTimer != null) {
+
+            cl('have active timer');
+
+            if (tracker.updateInterval == null) {
+
+                cl('dont have a running timer, starting now')
+
+                this.updateInterval = setInterval(function() {
+
+                    var now = new Date()
+                    //now = now.getTime();
+                    var startDate = new Date(tracker.currentTimer.start);
+
+                    //return;
+
+                    //if (typeof startDate == 'string') {
+                    //    startDate = new Date(Date.parse(startDate))
+                    //}
+
+                    var secondsDiff = utilities.secondsBetweenDates(now, startDate);
+                    var timestamp = utilities.formatSecondsAsTime(secondsDiff)
+
+                    $('.tracker .inner.active').first().find('.time').text(timestamp);
+
+                }, 1000)
+
+            }
+
+        }
+
+    }
+
     /**
      *  @param {Object} tracker  tracker
      *
      *  Renders a tracker element
      */
-    render(data) {
+    render(data, today) {
 
         if (data == undefined) {
             return;
         }
 
+        var todaysTimers = data.days[today];
+        var isRunningDOM = "";
+
+        if (todaysTimers != undefined) {
+            cl('oday days: ', todaysTimers);
+            for (var i = 0; i < todaysTimers.length; i++) {
+                if (todaysTimers[i].end == null) {
+                    tracker.currentTimer = todaysTimers[i];
+                    isRunningDOM = " active ";
+                }
+            }
+        }
+
+        clearInterval(tracker.updateInterval);
+        tracker.updateInterval = null;
+        tracker.renderRunningTimestamp();
+
         $('.tracker-container').append('\
             <div class="tracker col-md-3" data-id="' + data.localId + '" data-color="' + data.color + '">\
-                <div class="inner">\
+                <div class="inner ' + isRunningDOM + '">\
                     <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
                     <p class="name">' + data.name + '</p>\
                     <p class="time">00:00:00</p>\
@@ -381,7 +448,7 @@ class Tracker {
 
             for (var i = 0; i < data.data.length; i++) {
                 cl(data[i])
-                tracker.render(data.data[i]);
+                tracker.render(data.data[i], data.day);
             }
 
         }
