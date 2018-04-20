@@ -62,6 +62,89 @@ app.get("/dashboard*", function(req, res) {
 
 })
 
+
+/* For Facebook Validation */
+app.get('/webhook', (req, res) => {
+  if (req.query['hub.mode'] && req.query['hub.verify_token'] === 'TimeTrackerRGU3095@uk') {
+    res.status(200).send(req.query['hub.challenge']);
+  } else {
+    res.status(403).end();
+  }
+});
+
+app.get('/policy', (req, res) => {
+    res.status(200).send(req.query['This is just a uni project, pls work']);
+})
+
+/* Handling all messenges*/
+
+app.post('/webhook', (req, res) => {
+  console.log(req.body);
+  if (req.body.object === 'page') {
+    req.body.entry.forEach((entry) => {
+      entry.messaging.forEach((event) => {
+          console.log(event)
+          if (event.message && event.message.text) {
+              sendMessage(event);
+          }
+      });
+    });
+
+}
+res.status(200).end();
+});
+
+const request = require('request');
+
+function sendMessage(event) {
+  let sender = event.sender.id;
+  let text = event.message.text;
+
+  request({
+    url: 'https://graph.facebook.com/v2.6/me/messages',
+    qs: {access_token: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6'},
+    method: 'POST',
+    json: {
+      recipient: {id: sender},
+      message: {text: text}
+    }
+  }, function (error, response) {
+    if (error) {
+        console.log('Error sending message: ', error);
+    } else if (response.body.error) {
+        console.log('Error: ', response.body.error);
+    }
+  });
+}
+
+/*const Bot = require('messenger-bot')
+
+let bot = new Bot({
+  token: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6',
+  verify: 'TimeTrackerRGU3095@uk',
+  app_secret: 'd532825d3fa15bf1a0729692c6adbac6'
+})
+
+bot.on('error', (err) => {
+  console.log(err.message)
+})
+
+bot.on('message', (payload, reply) => {
+  let text = payload.message.text
+
+  bot.getProfile(payload.sender.id, (err, profile) => {
+    if (err) throw err
+
+    reply({ text }, (err) => {
+      if (err) throw err
+
+      console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
+    })
+  })
+})
+
+app.use('/webhook', bot.middleware());*/
+
 app.get("/", function(req, res) {
 
     if (req.session.userId != undefined) {
@@ -147,3 +230,27 @@ io.on('connection', function(socket){
   });
 
 });
+
+
+
+
+
+
+
+
+// FB
+
+/*const BootBot = require('bootbot');
+
+const bot = new BootBot({
+  accessToken: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6',
+  verifyToken: 'TimeTrackerRGU3095@uk',
+  appSecret: 'd532825d3fa15bf1a0729692c6adbac6'
+});
+
+bot.on('message', (payload, chat) => {
+  const text = payload.message.text;
+  chat.say(`Echo: ${text}`);
+});
+
+bot.start();*/
