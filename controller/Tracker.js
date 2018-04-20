@@ -13,6 +13,71 @@ daysFromEpoch = function() {
 	return days
 }
 
+router.route('/addNote')
+
+    .post(function(req, res) {
+
+        //console.log(req.body);
+
+        var trackerId = req.body.timer.trackerId;
+        var timerId = req.body.timer.localId;
+        var day = req.body.timer.day;
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            var trackerDay = [];
+
+            var tracker = trackers[0];
+
+            var trackerDay = tracker.days[day];
+
+            console.log('collection of the timers day: ', trackerDay);
+
+            var timer = undefined;
+
+            var notes = [];
+
+            for (var i = 0; i < trackerDay.length; i++) {
+
+                if (trackerDay[i].localId == timerId) {
+
+                    if (trackerDay[i].notes != undefined) {
+                        notes = trackerDay[i].notes;
+                    }
+
+                    notes.push({
+                        timestamp: Date.now(),
+                        description: req.body.note
+                    })
+
+                    trackerDay[i].notes = notes;
+
+                }
+
+            }
+
+            tracker.days[day] = trackerDay;
+            tracker.markModified('days');
+
+            console.log('final: ', tracker);
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to save new timer', err);
+
+                res.send({
+                    success: true,
+                    data: 'note added'
+                });
+
+            })
+
+        })
+
+    })
+
 router.route('/addNewTimer')
 
     .post(function(req, res) {
@@ -42,7 +107,8 @@ router.route('/addNewTimer')
                 start: Date.now(),
                 end: null,
                 localId: timerId,
-                day: day
+                day: day,
+                trackerId: tracker.localId
             })
 
             tracker.days[day] = trackerDay;

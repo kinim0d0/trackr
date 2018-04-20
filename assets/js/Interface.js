@@ -48,7 +48,7 @@ $("input").on('keyup', function (e) {
 	if ( (e.keyCode == 13) && ($(this).hasClass("add-note")) ) {
 
 		var note = $(this).val();
-		cl('adding note', note);
+		tracker.addNote(note)
 		$(this).val('');
 
 	}

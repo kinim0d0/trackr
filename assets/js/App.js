@@ -24,7 +24,7 @@ class App {
         }
 
         //storage.init();
-        //tracker.init();
+        tracker.init();
         server.init();
 
     }

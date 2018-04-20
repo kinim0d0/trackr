@@ -4,7 +4,26 @@ class Tracker {
         this.updateInterval = null;
         this.currentTimer = null;
         this.runningTimer = null;
+        this.loadedLogObjects = [];
+        this.loadedTrackerObjects = [];
 	}
+
+    /**
+     *  @param {String} localId  localId of the tracker
+     *
+     *  Toggles a tracker's state
+     */
+    addNote(note) {
+
+        server.api('/tracker/addNote', {
+            timer: tracker.currentTimer,
+            note: note
+        }, function(success, data) {
+            cl('note added', success, data);
+            server.init();
+        })
+
+    }
 
     /**
      *  @param {String} localId  localId of the tracker
@@ -282,6 +301,8 @@ class Tracker {
                     tracker.currentTimer = todaysTimers[i];
                     isRunningDOM = " active ";
                 }
+                todaysTimers[i].trackerId = data.localId;
+                tracker.loadedLogObjects.push(todaysTimers[i]);
             }
         }
 
@@ -360,7 +381,7 @@ class Tracker {
      *  Runs when the browser is loaded
      */
     init() {
-        this.reloadList();
+        //this.reloadList();
     }
 
     /**
@@ -442,13 +463,68 @@ class Tracker {
 
         cl('rendering dashboard with', data);
 
+        tracker.loadedLogObjects = [];
+        tracker.loadedTrackerObjects = [];
+
         if (data.view == "day") {
+
+            // Rendering trackers
 
             $('.task-container, .tracker-container, .log-container').empty();
 
             for (var i = 0; i < data.data.length; i++) {
                 cl(data[i])
                 tracker.render(data.data[i], data.day);
+                tracker.loadedTrackerObjects.push(data.data[i]);
+            }
+
+            // Rendering Log
+
+            tracker.loadedLogObjects.sort(utilities.dynamicSort("start"));
+
+            for ( i = 0; i < tracker.loadedLogObjects.length; i++) {
+
+                var logsTracker = null;
+
+                for (var j = 0; j < tracker.loadedTrackerObjects.length; j++) {
+                    if (tracker.loadedTrackerObjects[j].localId == tracker.loadedLogObjects[i].trackerId) {
+                        logsTracker = tracker.loadedTrackerObjects[j];
+                    }
+                }
+
+                //cl('Rendering LOG object', tracker.loadedLogObjects[i], logsTracker)
+
+                var notesDOM = '';
+
+                if (tracker.loadedLogObjects[i].notes != undefined) {
+
+                    var notes = tracker.loadedLogObjects[i].notes;
+
+                    for (j = 0; j < notes.length; j++) {
+
+                        var note = notes[j];
+
+                        notesDOM += '\
+                            <div class="note">\
+                                <p class="timestamp">' + utilities.getFormattedDate(note.timestamp, 'HHMM') + '</p>\
+                                <p class="description">\
+                                    ' + note.description + '\
+                                </p>\
+                                <i class="fas fa-pencil-alt edit-note"></i>\
+                            </div>\
+                        '
+                    }
+
+                }
+
+                $('.log-container').prepend('\
+                    <div class="log direct" data-border-color="' + logsTracker.color + '">\
+                        <p class="title">' + logsTracker.name + '</p>\
+                        <span class="time start">' + utilities.getFormattedDate(tracker.loadedLogObjects[i].start, 'HHMM') + '</span>\
+                        ' + notesDOM + '\
+                    </div>\
+                ')
+
             }
 
         }
@@ -505,7 +581,7 @@ $h.on("click touch", ".save-tracker-btn", function() {
         color: $this.find(".color-picker .color.selected").attr("data-color"),
         localId: localId,
         deleted: false,
-        isRunning: false
+        tasks: []
     }
 
     tracker.save(data);

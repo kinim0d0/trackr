@@ -33,6 +33,22 @@ Utilities.prototype.daysFromEpoch = function() {
 	return days
 }
 
+Utilities.prototype.dynamicSort =  function(property) {
+
+    var sortOrder = 1;
+
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+
+}
+
 Utilities.prototype.daysFromEpochToDate = function(date) {
 	var current_date = new Date(date);
 	var epocDate = new Date(new Date().getTime() / 1000);
@@ -72,6 +88,53 @@ Utilities.prototype.formatSecondsAsTime = function(seconds) {
 	if (hr) hr = "00";
 
 	return hr + ':' + min + ':' + sec;
+
+}
+
+Utilities.prototype.getFormattedDate = function(dateObj, format) {
+
+	var str = new Date();
+
+	if (dateObj != undefined) {
+		str = new Date(dateObj);
+	}
+
+	var dateStr = "";
+	var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+	switch (format) {
+
+		case "MDD":
+			dateStr = monthNames[str.getMonth()] + " " + str.getDate();
+			break;
+
+		case "HHMM":
+			var hours = str.getHours();
+			if (hours < 10) hours = "0" + hours
+			var minutes = str.getMinutes();
+			if (minutes < 10) minutes = "0" + minutes
+			dateStr = hours + ":" + minutes;
+			break;
+
+		case "Y":
+			dateStr = str.getFullYear();
+			break;
+
+		case "M":
+			dateStr = monthNames[str.getMonth()];
+			break;
+
+		case "D":
+			dateStr = str.getDate();
+			break;
+
+		default:
+			dateStr = str.getFullYear() + "-" + (str.getMonth()+1) + "-" + str.getDate() + " " + str.getHours() + ":" + str.getMinutes()
+			break;
+
+	}
+
+	return dateStr;
 
 }
 

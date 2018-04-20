@@ -8,7 +8,8 @@ var trackerSchema = Schema({
 	name: {type: String, required: true},
 	days: {type: Schema.Types.Mixed, required: true},
 	color: {type: String, required: true},
-	deleted: {type: Boolean, required: true}
+	deleted: {type: Boolean, required: true},
+	tasks: {type: Schema.Types.Mixed, required: false},
 	/*
 		daysSinceEpoch: {
 			description,
