@@ -17,7 +17,15 @@ class App {
             this.socketIP = ""*/
         }
 
-        console.log("App started " + env)
+        console.log("App started " + env);
+
+        if ( $('body').attr('data-page') == 'dashboard' ) {
+            $('.loader-wrapper').removeClass('hide');
+        }
+
+        //storage.init();
+        //tracker.init();
+        server.init();
 
     }
 
@@ -30,10 +38,6 @@ $(document).ready(function() {
 
     app = new App("LOCAL");
     $('#daterange').daterangepicker();
-
-    storage.init();
-    tracker.init();
-    server.init();
 
 })
 

@@ -5,6 +5,32 @@ router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
 var Log = require('../schemas/Log');
 
+router.route('/getDay')
+
+    .post(function(req, res) {
+
+        var day = req.body.day;
+
+        Tracker.getAllFromUser(req.session.userId, function(err, trackers) {
+
+            for (tracker in trackers.days) {
+
+                if (tracker != day) {
+                    // /delete tracker;
+                }
+
+            }
+
+            res.send({
+                data: trackers,
+                view: 'day',
+                day: req.body.day
+            })
+
+        })
+
+    })
+
 router.route('/')
 
     .post(function(req, res) {

@@ -30,8 +30,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
-//var DB_LINK = "mongodb://localhost/trackr";
-var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
+var DB_LINK = "mongodb://localhost/trackr";
+//var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
 
 mongoose.connect(DB_LINK, {
   config: { autoIndex: true }
@@ -45,7 +45,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-  //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+  if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
   if (req.session.userId == undefined) {
 
@@ -73,25 +73,33 @@ app.get('/webhook', (req, res) => {
 });
 
 app.get('/policy', (req, res) => {
-    res.status(200).send(req.query['This is just a uni project, pls work']);
+    res.status(200).send(req.query['This is just a uni project, pls accept it fb']);
 })
 
 /* Handling all messenges*/
 
 app.post('/webhook', (req, res) => {
-  console.log(req.body);
-  if (req.body.object === 'page') {
-    req.body.entry.forEach((entry) => {
-      entry.messaging.forEach((event) => {
-          console.log(event)
-          if (event.message && event.message.text) {
-              sendMessage(event);
-          }
-      });
-    });
 
-}
-res.status(200).end();
+    //console.log(req.body);
+    if (req.body.object === 'page') {
+
+        if (req.body.entry != undefined) {
+
+            req.body.entry.forEach((entry) => {
+                entry.messaging.forEach((event) => {
+                    //console.log(event)
+                    if (event.message && event.message.text) {
+                        sendMessage(event);
+                    }
+                });
+            });
+
+        }
+
+    }
+
+    res.status(200).end();
+
 });
 
 const request = require('request');
@@ -116,34 +124,6 @@ function sendMessage(event) {
     }
   });
 }
-
-/*const Bot = require('messenger-bot')
-
-let bot = new Bot({
-  token: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6',
-  verify: 'TimeTrackerRGU3095@uk',
-  app_secret: 'd532825d3fa15bf1a0729692c6adbac6'
-})
-
-bot.on('error', (err) => {
-  console.log(err.message)
-})
-
-bot.on('message', (payload, reply) => {
-  let text = payload.message.text
-
-  bot.getProfile(payload.sender.id, (err, profile) => {
-    if (err) throw err
-
-    reply({ text }, (err) => {
-      if (err) throw err
-
-      console.log(`Echoed back to ${profile.first_name} ${profile.last_name}: ${text}`)
-    })
-  })
-})
-
-app.use('/webhook', bot.middleware());*/
 
 app.get("/", function(req, res) {
 
@@ -230,27 +210,3 @@ io.on('connection', function(socket){
   });
 
 });
-
-
-
-
-
-
-
-
-// FB
-
-/*const BootBot = require('bootbot');
-
-const bot = new BootBot({
-  accessToken: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6',
-  verifyToken: 'TimeTrackerRGU3095@uk',
-  appSecret: 'd532825d3fa15bf1a0729692c6adbac6'
-});
-
-bot.on('message', (payload, chat) => {
-  const text = payload.message.text;
-  chat.say(`Echo: ${text}`);
-});
-
-bot.start();*/

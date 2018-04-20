@@ -32,7 +32,8 @@ var trackerSchema = Schema({
 }, {
 
 	collection: 'Tracker',
-	timestamps: true
+	timestamps: true,
+	usePushEach: true,
 
 });
 

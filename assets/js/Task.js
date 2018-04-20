@@ -91,7 +91,7 @@ class Task {
      */
     reloadList() {
 
-        var todos = [
+        /*var todos = [
             {
                 name: 'task1',
                 todos: [
@@ -172,7 +172,7 @@ class Task {
 
             this.render(todos[i]);
 
-        }
+        }*/
 
     }
 

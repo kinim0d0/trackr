@@ -33,6 +33,14 @@ Utilities.prototype.daysFromEpoch = function() {
 	return days
 }
 
+Utilities.prototype.daysFromEpochToDate = function(date) {
+	var current_date = new Date(date);
+	var epocDate = new Date(new Date().getTime() / 1000);
+	var res = Math.abs(current_date - epocDate) / 1000;
+	var days = Math.floor(res / 86400);
+	return days
+}
+
 /**
  *	@param {Date}  Date1
  *	@param {Date}  Date2

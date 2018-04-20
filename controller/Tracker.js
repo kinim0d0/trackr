@@ -5,6 +5,67 @@ router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
 var Log = require('../schemas/Log');
 
+daysFromEpoch = function() {
+	var current_date = new Date();
+	var epocDate = new Date(new Date().getTime() / 1000);
+	var res = Math.abs(current_date - epocDate) / 1000;
+	var days = Math.floor(res / 86400);
+	return days
+}
+
+router.route('/addNewTimer')
+
+    .post(function(req, res) {
+
+        var trackerId = req.body.trackerId;
+        var day = daysFromEpoch();
+
+        console.log(trackerId, day, '----')
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            console.log('trackers: ', trackers);
+
+            var trackerDay = [];
+
+            var tracker = trackers[0];
+
+            if (typeof tracker.days[day] != 'undefined') {
+                // Creating a day container
+                trackerDay = tracker.days[day];
+            }
+
+            trackerDay.push({
+                start: Date.now(),
+                end: null
+            })
+
+            tracker.days[day] = trackerDay;
+            tracker.markModified('days');
+            //tracker.markModified('days.' + day);
+
+            console.log(trackerDay);
+
+            console.log('final: ', tracker);
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to save new timer', err);
+
+            })
+
+            res.send({
+                success: true,
+                data: 'saved timer'
+            });
+
+        })
+
+    })
+
+
 router.route('/edit')
 
     .post(function(req, res) {

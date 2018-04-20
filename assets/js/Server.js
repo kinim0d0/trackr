@@ -66,9 +66,22 @@ class Server {
 	/**
 	 *	Starts a sync when the browser loaded
 	 */
-	init() {
-		this.sync()
-	}
+
+	 init() {
+
+		server.api("/sync/getDay", { day: utilities.daysFromEpochToDate(timeline.currentDateFrom)  }, function(success, data) {
+
+			cl('SERVER GOT DAY', data)
+
+			$('.loader-wrapper').addClass('hide');
+
+			$('body').attr('data-view', data.view);
+
+			tracker.renderDashboard(data);
+
+		});
+
+ 	}
 
 	/**
 	 *	Syncs the client's data with the database
@@ -155,7 +168,7 @@ class Server {
 		server.socketConnection = true;
 
 		cl("setting up socketIO");
-		var socket = io('http://localhost:3002')
+		var socket = io('www.doentry.com:3002')
 
 		socket.on('realTimeSyncStarted', function(data){
 			cl("Connected to socket");

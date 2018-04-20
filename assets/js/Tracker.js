@@ -3,6 +3,7 @@ class Tracker {
     constructor() {
         this.updateInterval = null;
         this.currentTimer = null;
+        this.runningTimer = null;
 	}
 
     /**
@@ -14,20 +15,51 @@ class Tracker {
 
         console.log("Toggling tracker:  " + localId);
 
-        var stopped = false;
+        var $this = $('.tracker[data-id="' + localId + '"] .inner');
 
-        $('.tracker .inner.active').each(function() {
-            var id = $(this).parent().attr('data-id');
-            if (id != localId) {
-                tracker.stopTimer(id);
-                stopped = true;
-            }
+        server.api('/tracker/addNewTimer', {
+            trackerId: localId
+        }, function(success, data) {
+            cl('timer added', success, data);
         })
 
-        if ( (!stopped) && (tracker.updateInterval != null) ) {
-            //this.stopTimer(localId)
-        } else {
-            this.createTimer(localId);
+        return;
+
+
+
+
+
+
+        // Runs if there is a running timer, it saves the running timer
+        if (tracker.runningTimer != null) {
+
+            cl('saving current timer')
+
+            var currentTimer = tracker.runningTimer;
+            currentTimer.end = new Date();
+
+            server.api("tracker/editTimer", currentTimer, function (success, data) {
+
+                cl("Timer saved to server", success, data);
+
+            })
+
+            $('.tracker .inner').removeClass('active');
+
+        }
+
+        tracker.runningTimer = null;
+
+        // Starts the new timer if another not active tracker was clicked
+        if (localId != currentTimer.trackerId) {
+
+            $this.addClass("active");
+            tracker.runningTimer = {
+                start: new Date(),
+                end: null,
+                localId: "TI" + utilities.generateLocalId()
+            }
+
         }
 
     }
@@ -323,13 +355,11 @@ class Tracker {
      */
     save(data) {
 
-        this.saveToLocal(data);
-
         server.api("tracker/edit", data, function (success, data) {
 
             cl("Tracker saved to server", success, data);
 
-            tracker.reloadList();
+            server.init();
 
             if (data["success"] == true) {
 
@@ -337,51 +367,24 @@ class Tracker {
                 //$this.find(data["error"].field).first().after("<p class='server-error'>" + data["error"].msg + "</p>");
             }
 
-            // Until socket io is not working
-            server.sync()
-
         })
 
     }
 
-    /**
-     *  @param {Object} data  tracker
-     *
-     *  Saves a tracker to localStorage
-     */
-    saveToLocal(data) {
+    renderDashboard(data) {
 
-        if (storage.trackers == null) {
+        cl('rendering dashboard with', data);
 
-            storage.trackers = {
-            	list: []
+        if (data.view == "day") {
+
+            $('.task-container, .tracker-container, .log-container').empty();
+
+            for (var i = 0; i < data.data.length; i++) {
+                cl(data[i])
+                tracker.render(data.data[i]);
             }
 
         }
-
-        var loc = storage.trackers.list.indexOf(data.localId);
-
-        if (loc > -1) {
-
-            /*var inStorage = storage.trackers[data.localId];
-
-            /*inStorage.name = data.name;
-            inStorage.color = data.color;
-            inStorage.localId = data.localId;
-            inStorage.deleted = data.deleted;
-            inStorage.isRunning = data.isRunning;*/
-
-        } else {
-
-            storage.trackers.list.push(data.localId);
-
-        }
-
-        storage.trackers[data.localId] = data;
-
-        storage.saveState();
-
-        tracker.reloadList();
 
     }
 
@@ -396,12 +399,6 @@ $("html").on("click touch", ".tracker .inner", function() {
 
     if ($this.parent().hasClass('disabled')) {
         return
-    }
-
-    if ($this.hasClass("active")) {
-        $this.removeClass("active");
-    } else {
-        $this.addClass("active");
     }
 
     tracker.toggle($(this).parent().attr("data-id"));
