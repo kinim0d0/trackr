@@ -13,6 +13,33 @@ daysFromEpoch = function() {
 	return days
 }
 
+router.route('/removeTracker')
+
+    .post(function(req, res) {
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: req.body.trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            var tracker = trackers[0];
+
+            tracker.deleted = true;
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to REMOVED tracker', err);
+
+                res.send({
+                    success: true,
+                    data: 'tracker removed'
+                });
+
+            })
+
+        })
+
+    })
+
 router.route('/addNote')
 
     .post(function(req, res) {

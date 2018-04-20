@@ -25,15 +25,14 @@ $h.on('click touch', '.edit-note', function(e) {
 })
 
 // Adds a note element to a timer and focuses on the description element
-$h.on('click touch', '.add-note-to-timer', function(e) {
+$h.on('click touch', '.add-note-btn', function(e) {
 
     var $this = $(this);
 
-    $this.parent().append('\
+    $this.parent().before('\
         <div class="note">\
-            <p class="timestamp">13:45</p>\
+            <p class="timestamp">00:00</p>\
             <p class="description"> </p>\
-            <i class="fas fa-pencil-alt edit-note"></i>\
         </div>\
     ')
     setTimeout(function() {

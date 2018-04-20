@@ -58,6 +58,13 @@
 		border: 2px solid #333 !important;
 		color: #333 !important;
 		float: right;
+		cursor: pointer;
+	}
+
+	.remove-tracker-btn {
+		float: left;
+		color: $red !important;
+		border-color: $red !important;
 	}
 
 }

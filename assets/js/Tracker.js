@@ -52,46 +52,28 @@ class Tracker {
 
             // Starting a new timer
 
-            server.api('/tracker/addNewTimer', {
-                trackerId: localId,
-                localId: "TI" + utilities.generateLocalId()
-            }, function(success, data) {
-                cl('timer added', success, data);
-                server.init();
-            })
+            if (tracker.runningTimer == null) {
 
-        }
+                server.api('/tracker/addNewTimer', {
+                    trackerId: localId,
+                    localId: "TI" + utilities.generateLocalId()
+                }, function(success, data) {
+                    cl('timer added', success, data);
+                    server.init();
+                })
 
-        return;
+            } else {
 
-        // Runs if there is a running timer, it saves the running timer
-        if (tracker.runningTimer != null) {
+                server.api('/tracker/stopTimer', {
+                    trackerId: localId,
+                    timer: tracker.currentTimer
+                }, function(success, data) {
+                    cl('timer stopped', success, data);
+                    server.init();
+                })
 
-            cl('saving current timer')
+                // THen add TODO
 
-            var currentTimer = tracker.runningTimer;
-            currentTimer.end = new Date();
-
-            server.api("tracker/editTimer", currentTimer, function (success, data) {
-
-                cl("Timer saved to server", success, data);
-
-            })
-
-            $('.tracker .inner').removeClass('active');
-
-        }
-
-        tracker.runningTimer = null;
-
-        // Starts the new timer if another not active tracker was clicked
-        if (localId != currentTimer.trackerId) {
-
-            $this.addClass("active");
-            tracker.runningTimer = {
-                start: new Date(),
-                end: null,
-                localId: "TI" + utilities.generateLocalId()
             }
 
         }
@@ -306,6 +288,10 @@ class Tracker {
             }
         }
 
+        if (data.deleted) {
+            return;
+        }
+
         clearInterval(tracker.updateInterval);
         tracker.updateInterval = null;
         tracker.renderRunningTimestamp();
@@ -396,11 +382,12 @@ class Tracker {
         var trackerName = "";
         var trackerColor = "red";
 
+        var $tracker = $('.tracker[data-id="' + localId + '"]').first();
+
         if (localId != undefined) {
-            var tracker = storage.trackers[localId];
             dropdownTitle = "Edit";
-            trackerName = tracker.name;
-            trackerColor = tracker.color;
+            trackerName = $tracker.find('.name').first().text();
+            trackerColor = $tracker.attr('data-color');
         } else {
             $this = $this.find('.dropdown');
         }
@@ -428,6 +415,7 @@ class Tracker {
                     </div>\
                 </div>\
                 <button class="submit-btn save-tracker-btn">Save</button>\
+                <button class="submit-btn remove-tracker-btn">Remove</button>\
             </div>\
         ')
         .addClass('show')
@@ -510,7 +498,6 @@ class Tracker {
                                 <p class="description">\
                                     ' + note.description + '\
                                 </p>\
-                                <i class="fas fa-pencil-alt edit-note"></i>\
                             </div>\
                         '
                     }
@@ -519,9 +506,15 @@ class Tracker {
 
                 $('.log-container').prepend('\
                     <div class="log direct" data-border-color="' + logsTracker.color + '">\
+                        <i class="fas fa-pencil-alt edit-log"></i>\
                         <p class="title">' + logsTracker.name + '</p>\
                         <span class="time start">' + utilities.getFormattedDate(tracker.loadedLogObjects[i].start, 'HHMM') + '</span>\
                         ' + notesDOM + '\
+                        <div class="form-group clearfix">\
+                            <button class="edit-btn save-timer-btn">Save</button>\
+                            <button class="edit-btn add-note-btn">Add Note</button>\
+                            <button class="edit-btn remove-timer-btn">Remove Time</button>\
+                        </div>\
                     </div>\
                 ')
 
@@ -600,5 +593,29 @@ $h.on('click touch', '.tracker-dropdown-toggle', function(e) {
 
     console.log('work')
     tracker.renderEditModal($this, localId);
+
+})
+
+$h.on('click touch', '.remove-tracker-btn', function(e) {
+
+    e.stopImmediatePropagation();
+
+    var $this = $(this).parent().parent()
+    var localId = $this.attr('data-id');
+
+    console.log('removing: ', localId)
+
+    server.api('/tracker/removeTracker', {
+        trackerId: localId,
+    }, function(success, data) {
+        cl('tracker removed', success, data);
+        server.init();
+    })
+
+})
+
+$h.on('click touch', '.edit-log', function() {
+
+    $(this).parent().attr('data-state', 'editing');
 
 })
