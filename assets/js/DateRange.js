@@ -68,6 +68,10 @@ class Timeline {
      */
     updateTimelineDate(dateFrom, dateTo) {
 
+        if (dateFrom == dateTo) {
+            dateTo = undefined;
+        }
+
         var $singleRange = $('.date-range .single-range');
         var $multiRange = $('.date-range .multi-range');
 
@@ -117,6 +121,9 @@ class Timeline {
 
             $multiDaySections.addClass('hide')
             $singleDaySections.removeClass('hide')
+
+            if (server != undefined)
+                server.init(1);
 
         }
 

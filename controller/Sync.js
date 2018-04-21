@@ -13,10 +13,14 @@ router.route('/getDay')
 
         Tracker.getAllFromUser(req.session.userId, function(err, trackers) {
 
-            for (tracker in trackers.days) {
+            for (var i = 0; i < trackers.length; i++) {
 
-                if (tracker != day) {
-                    // /delete tracker;
+                var tracker = trackers[i];
+                var trackerDays = tracker.days;
+                for (trackerDay in trackerDays) {
+                    if (trackerDay != day) {
+                        delete trackerDays[trackerDay]
+                    }
                 }
 
             }

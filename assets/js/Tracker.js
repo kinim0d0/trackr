@@ -273,7 +273,12 @@ class Tracker {
             return;
         }
 
-        var todaysTimers = data.days[today];
+        var todaysTimers = undefined;
+
+        if (data.days != undefined) {
+            todaysTimers = data.days[today];
+        }
+
         var isRunningDOM = "";
 
         if (todaysTimers != undefined) {
@@ -463,7 +468,7 @@ class Tracker {
 
             // Rendering trackers
 
-            //$('.task-container, .tracker-container, .log-container').empty();
+            $('.task-container, .tracker-container, .log-container').empty();
 
             for (var i = 0; i < data.data.length; i++) {
                 cl(data[i])

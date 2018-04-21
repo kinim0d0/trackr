@@ -67,9 +67,14 @@ class Server {
 	 *	Starts a sync when the browser loaded
 	 */
 
-	 init() {
+	 init(offset) {
 
-		server.api("/sync/getDay", { day: utilities.daysFromEpochToDate(timeline.currentDateFrom)  }, function(success, data) {
+		 var day = utilities.daysFromEpochToDate(timeline.currentDateFrom);
+		 if (offset != undefined) {
+			 day += offset;
+		 }
+
+		server.api("/sync/getDay", { day: day  }, function(success, data) {
 
 			cl('SERVER GOT DAY', data)
 

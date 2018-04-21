@@ -30,8 +30,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
-//var DB_LINK = "mongodb://localhost/trackr";
-var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
+var DB_LINK = "mongodb://localhost/trackr";
+//var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
 
 mongoose.connect(DB_LINK, {
   config: { autoIndex: true }
@@ -45,7 +45,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-  //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+ if (req.session.userId == undefined) { req.session.userId = "5adb574b894e6939f58211ff"; }
 
   if (req.session.userId == undefined) {
 
@@ -113,6 +113,7 @@ app.post('/webhook', (req, res) => {
                                             user.save(function(err, user) {
 
                                                 sendMessageFb(event.sender.id, "Successfully authenticated");
+                                                sendMessageFb(event.sender.id, "Type 'info' to see all the options");
 
                                             })
 
@@ -154,8 +155,31 @@ app.post('/webhook', (req, res) => {
 const request = require('request');
 
 function handleFbRequest(user, text) {
+
     console.log('handling users request', user, text);
-    sendMessageFb(user.facebookId, 'already authenticated');
+
+    var msg = "I didn't quite get that, you can type info to check all available commands"
+
+    switch (text) {
+        case "info":
+            msg = '\
+Here are all the things I can do: \u000A\
+Start a timer - start {Tracker Name}\u000A\
+Stop the currently running timer - stop\u000A\
+Get all todos for today- todos\u000A\
+Create a new time tracker - create {Tracker Name}\u000A\
+Create a new task for today - add {Task Name}\u000A\
+Add a todo to a task - add {todo} to {task}\u000A\
+Add a note with the current timestamp to the running tracker - note {note}\u000A\
+            ';
+            break;
+
+        default:
+
+    }
+
+    sendMessageFb(user.facebookId, msg);
+
 }
 
 function sendMessageFb(sender, text) {
