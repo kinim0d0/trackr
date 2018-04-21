@@ -20,7 +20,7 @@ router.route('/addTask')
         var trackerId = req.body.task.trackerId;
         var day = req.body.day;
 
-        console.log(trackerId, day, '----')
+        console.log(trackerId, day, '----');
 
         Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
 
@@ -163,6 +163,37 @@ router.route('/addNewTimer')
         var timerId = req.body.localId
 
         console.log(trackerId, day, '----')
+
+        // STOP any running trackers
+
+        Tracker.getAllFromUser(req.session.userId, function(err, trackers) {
+
+            console.log('sto[pp]', trackers)
+
+            for (var i = 0; i < trackers.length; i++) {
+
+                var tracker = trackers[i];
+                var todayDays = tracker.days[day];
+
+                if (todayDays == undefined) {
+                    continue
+                }
+
+                for (var j = 0; j < todayDays.length; j++) {
+                    if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
+                        todayDays[j].end = Date.now();
+                        tracker.markModified('days');
+                        tracker.save(function(err, tracker) {
+                            console.log('stopped timer')
+                        })
+                    }
+                }
+
+            }
+
+        })
+
+        //return;
 
         Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
 
