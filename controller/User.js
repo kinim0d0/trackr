@@ -3,7 +3,7 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var User = require('../schemas/User');
-    
+
 router.route('/login')
 
     .post(function(req, res) {
@@ -91,13 +91,14 @@ router.route('/login')
                             } else {
 
                                 req.session.userId = existingUser._id
+                                req.session.facebookVerificationID = existingUser.facebookVerificationID
 
                                 res.send({
                                     success: true,
                                     data: {
                                         view: "loggedIn"
                                     }
-                                });   
+                                });
 
                             }
 
@@ -126,13 +127,14 @@ router.route('/login')
                         } else {
 
                             req.session.userId = existingUser._id
+                            req.session.facebookVerificationID = existingUser.facebookVerificationID
 
                             res.send({
                                 success: true,
                                 data: {
                                     view: "loggedIn"
                                 }
-                            });   
+                            });
 
                         }
 
@@ -142,7 +144,7 @@ router.route('/login')
 
             })
 
-        }  
+        }
 
     })
 

@@ -279,12 +279,17 @@ class Tracker {
         if (todaysTimers != undefined) {
             cl('oday days: ', todaysTimers);
             for (var i = 0; i < todaysTimers.length; i++) {
-                if (todaysTimers[i].end == null) {
+                if ( (todaysTimers[i].end == null) && (todaysTimers[i].name == undefined) ) {
                     tracker.currentTimer = todaysTimers[i];
                     isRunningDOM = " active ";
                 }
                 todaysTimers[i].trackerId = data.localId;
                 tracker.loadedLogObjects.push(todaysTimers[i]);
+                if (todaysTimers[i].name != undefined) {
+
+                    task.render(todaysTimers[i], todaysTimers[i].color);
+
+                }
             }
         }
 
@@ -458,12 +463,12 @@ class Tracker {
 
             // Rendering trackers
 
-            $('.task-container, .tracker-container, .log-container').empty();
+            //$('.task-container, .tracker-container, .log-container').empty();
 
             for (var i = 0; i < data.data.length; i++) {
                 cl(data[i])
-                tracker.render(data.data[i], data.day);
                 tracker.loadedTrackerObjects.push(data.data[i]);
+                tracker.render(data.data[i], data.day);
             }
 
             // Rendering Log

@@ -14,33 +14,38 @@ class Task {
      */
     render(data) {
 
-        $('.task-container').append('\
-			<div class="task col-md-3" data-color="' + data.color + '">\
-				<div class="inner">\
-                    <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
-					<div class="progress-pie-chart" data-percent="43">\
-					  <div class="ppc-progress">\
-					    <div class="ppc-progress-fill"></div>\
-					  </div>\
-					  <div class="ppc-percents">\
-					    <div class="pcc-percents-wrapper">\
-                          <span>' + data.name + '</span>\
-					      <span>' + data.left + '</span>\
-					    </div>\
-					  </div>\
-					</div>\
-				</div>\
-			</div>\
-        ')
+        var tasksTracker = null;
+        cl('www', data, tracker.loadedTrackerObjects, tracker.loadedTrackerObjects.length)
 
-        var $ppc = $('.progress-pie-chart').last(),
-        percent = parseInt($ppc.data('percent')),
-        deg = 360*percent/100;
-        if (percent > 50) {
-          $ppc.addClass('gt-50');
+
+        for (var i = 0; i < tracker.loadedTrackerObjects.length; i++) {
+            cl(tracker.loadedTrackerObjects[i].localId, 'vs', data.trackerId)
+            if (tracker.loadedTrackerObjects[i].localId == data.trackerId) {
+                tasksTracker = tracker.loadedTrackerObjects[i];
+            }
         }
-        $('.ppc-progress-fill').css('transform','rotate('+ deg +'deg)');
-        $('.ppc-percents span.time').html(data.left + ' left');
+
+        $('.task-container').append('\
+            <div class="task clearfix" data-id="' + data.localId + '" data-color="' + tasksTracker.color + '">\
+                <div class="main">\
+                    <p class="name">' + data.name + '</p>\
+                    <p class="timeleft">3 hours</p>\
+                </div>\
+                <div class="list">\
+                    <ul class="scroll scroll--simple">\
+                        <li>\
+                            <label>\
+                                <input type="checkbox">\
+                                <i></i>\
+                                <span>12312</span>\
+                                <a>Remove</a>\
+                            </label>\
+                        </li>\
+                    </ul>\
+                    <input type="text" class="todo-new show-on-hover" placeholder="New Item">\
+                </div>\
+            </div>\
+        ')
 
     }
 
@@ -57,6 +62,12 @@ class Task {
 
         $('.dropdown-menu:not(.permanent)').remove();
 
+        var trackersDOM = "";
+
+        for (var i = 0; i < tracker.loadedTrackerObjects.length; i++) {
+            trackersDOM += "<option data-value='" + tracker.loadedTrackerObjects[i].localId + "'>" + tracker.loadedTrackerObjects[i].name + "</option>";
+        }
+
         $this
         .append('\
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">\
@@ -66,16 +77,10 @@ class Task {
                     <input class="name" type="text" value="' + taskName + '">\
                 </div>\
                 <div class="form-group">\
-                    <div class="color-picker">\
-                        <span class="color" data-color="pink"></span>\
-                        <span class="color" data-color="red"></span>\
-                        <span class="color" data-color="yellow"></span>\
-                        <span class="color" data-color="orange"></span>\
-                        <span class="color" data-color="green"></span>\
-                        <span class="color" data-color="blue"></span>\
-                        <span class="color" data-color="purple"></span>\
-                        <span class="color selected" data-color="grey"></span>\
-                    </div>\
+                    <label>Tracker</label>\
+                    <select>\
+                        ' + trackersDOM + '\
+                    </select>\
                 </div>\
                 <button class="submit-btn save-task-btn">Save</button>\
             </div>\
@@ -176,6 +181,20 @@ class Task {
 
     }
 
+    save(data) {
+
+        cl('saving task', data);
+
+        server.api('/tracker/addTask', {
+            task: data,
+            day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
+        }, function(success, data) {
+            cl('note added', success, data);
+            server.init();
+        })
+
+    }
+
 }
 
 // Toggles the dropdown for a task
@@ -189,8 +208,63 @@ $h.on('click touch', '.task-dropdown-toggle', function(e) {
 
 })
 
-/*$h.on('click touch', '.save-task-btn', function(e) {
+$h.on('click touch', '.save-task-btn', function(e) {
 
-})*/
+    var $this = $(this).parent().parent();
+
+    var localId = $this.attr('data-id');
+
+    if ( (localId == undefined) || (localId == "") ) {
+        cl('creating new')
+        localId = 'TA' + utilities.generateLocalId();
+    } else {
+        cl('updating')
+    }
+
+    var data = {
+        name: $this.find("input.name").first().val(),
+        localId: localId,
+        trackerId: $this.find('select').first().find('option:selected').attr('data-value'),
+        deleted: false,
+        todos: []
+    }
+
+    task.save(data);
+
+    $('.dropdown.show').removeClass('show');
+
+})
+
+
+$("html").on("keypress", ".todo-new", function(e){
+	var code = (e.keyCode ? e.keyCode : e.which);
+	if(code == 13) {
+	  var v = $(this).val();
+	  var s = v.replace(/ +?/g, '');
+	  if (s == ""){
+	    return false;
+	  }else{
+	    $(this).parent().find('ul').first().append("<li><label><input type='checkbox'><i></i><span>"+ v +"</span><a>Remove</a></label></li>");
+	    $(this).val("");
+        cl('added todo');
+	  }
+	}
+});
+
+
+$("html").on("click touch", ".list li a", function(){
+	var cardId = $(this).parent().parent().parent().parent().parent().parent().attr('data-id');
+	var _li = $(this).parent().parent();
+    _li.addClass("remove").stop().delay(100).slideUp("fast", function(){
+      _li.remove();
+      cl('removed task')
+    });
+});
+
+$("html").on("change", ".list li input", function(e){
+	cl('test', ($(e.target).is('a')));
+	if ($(e.target).is('a')) return
+    cl('change state')
+});
 
 var task = new Task();

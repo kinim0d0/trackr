@@ -7,10 +7,12 @@ SALT_WORK_FACTOR = 12;
 var userSchema = Schema({
 
 	password: {type: String, required: true},
+	facebookId: {type: Number, required: false},
+	facebookVerificationID: {type: String},
 	email: {
-		type: String, 
-		lowercase: true, 
-		required: true, 
+		type: String,
+		lowercase: true,
+		required: true,
 		index: {unique: true},
 		match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "#login-email"]
 	},
@@ -27,10 +29,11 @@ userSchema.pre('save', function(next) {
     var user = this;
 
     if (this.isNew) {
-    	
+
 		bcrypt.hash(user.password, SALT_WORK_FACTOR, function(err, hash) {
 			if (err) return next(err);
 			user.password = hash;
+			user.facebookVerificationID = hash.substr(0, 8);
 			next();
 		});
 

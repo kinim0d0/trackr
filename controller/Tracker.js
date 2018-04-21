@@ -13,6 +13,55 @@ daysFromEpoch = function() {
 	return days
 }
 
+router.route('/addTask')
+
+    .post(function(req, res) {
+
+        var trackerId = req.body.task.trackerId;
+        var day = req.body.day;
+
+        console.log(trackerId, day, '----')
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            console.log('trackers: ', trackers);
+
+            var trackerDay = [];
+
+            var tracker = trackers[0];
+
+            if (typeof tracker.days[day] != 'undefined') {
+                // Creating a day container
+                trackerDay = tracker.days[day];
+            }
+
+            trackerDay.push(req.body.task)
+
+            tracker.days[day] = trackerDay;
+            tracker.markModified('days');
+            //racker.markModified('days.' + day);
+
+            console.log(trackerDay);
+
+            console.log('final: ', tracker);
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to save new timer', err);
+
+            })
+
+            res.send({
+                success: true,
+                data: 'saved timer'
+            });
+
+        })
+
+    })
+
 router.route('/removeTracker')
 
     .post(function(req, res) {

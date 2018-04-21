@@ -30,8 +30,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
-var DB_LINK = "mongodb://localhost/trackr";
-//var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
+//var DB_LINK = "mongodb://localhost/trackr";
+var DB_LINK = "mongodb://dominik:OhhGodAPasswordAgain@ds115799.mlab.com:15799/trackr";
 
 mongoose.connect(DB_LINK, {
   config: { autoIndex: true }
@@ -45,7 +45,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
-  if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
+  //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
   if (req.session.userId == undefined) {
 
@@ -61,7 +61,6 @@ app.get("/dashboard*", function(req, res) {
   }
 
 })
-
 
 /* For Facebook Validation */
 app.get('/webhook', (req, res) => {
@@ -86,12 +85,62 @@ app.post('/webhook', (req, res) => {
         if (req.body.entry != undefined) {
 
             req.body.entry.forEach((entry) => {
+
                 entry.messaging.forEach((event) => {
-                    //console.log(event)
+
                     if (event.message && event.message.text) {
-                        sendMessage(event);
+
+                        console.log('New message from FB', event.sender.id, event.message.text);
+
+                        var User = require('./schemas/User');
+
+                        User.find({'facebookId': event.sender.id}, function(err, users) {
+
+                            if (users.length == 0) {
+
+                                var message = event.message.text;
+
+                                if (message.length == 8) {
+
+                                    User.find({'facebookVerificationID': message}, function(err, users) {
+
+                                        if (users.length != 0) {
+
+                                            var user = users[0];
+
+                                            user.facebookId = event.sender.id;
+
+                                            user.save(function(err, user) {
+
+                                                sendMessageFb(event.sender.id, "Successfully authenticated");
+
+                                            })
+
+                                        } else {
+
+                                            sendMessageFb(event.sender.id, "Invalid authentication key");
+
+                                        }
+
+                                    })
+
+                                } else {
+
+                                    sendMessageFb(event.sender.id, "Hi, please enter your autihentication key to get started");
+
+                                }
+
+                            } else {
+                                var user = users[0];
+                                handleFbRequest(user, event.message.text);
+                            }
+
+                        })
+
                     }
+
                 });
+
             });
 
         }
@@ -104,9 +153,14 @@ app.post('/webhook', (req, res) => {
 
 const request = require('request');
 
-function sendMessage(event) {
-  let sender = event.sender.id;
-  let text = event.message.text;
+function handleFbRequest(user, text) {
+    console.log('handling users request', user, text);
+    sendMessageFb(user.facebookId, 'already authenticated');
+}
+
+function sendMessageFb(sender, text) {
+  //let sender = event.sender.id;
+  //let text = event.message.text;
 
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
