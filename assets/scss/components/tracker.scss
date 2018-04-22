@@ -5,6 +5,9 @@
 	.tracker {
 		margin: 0em 0em 3em 0em;
 		background: transparent;
+		display: inline-block;
+		position: relative;
+		margin-right: 36px;
 
 		.inner {
 			width: 200px;

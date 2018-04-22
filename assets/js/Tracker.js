@@ -307,7 +307,7 @@ class Tracker {
         tracker.renderRunningTimestamp();
 
         $('.tracker-container').append('\
-            <div class="tracker col-md-3" data-id="' + data.localId + '" data-color="' + data.color + '">\
+            <div class="tracker" data-id="' + data.localId + '" data-color="' + data.color + '">\
                 <div class="inner ' + isRunningDOM + '">\
                     <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
                     <p class="name">' + data.name + '</p>\

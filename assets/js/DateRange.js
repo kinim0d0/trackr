@@ -9,7 +9,7 @@ class Timeline {
 
         this.updateTimelineDate(moment());
         this.currentDateFrom = moment();
-        this.currentDateTo = null;
+        this.currentDateTo = undefined;
 
     }
 

@@ -2,15 +2,35 @@
 
 }
 
-.add-note {
-	width: 100%;
-	position: absolute;
-	top: 60px;
-	left: 0;
-	margin: 0px 18px;
-	background: none;
-	border: none;
-	border-bottom: solid darkgrey 3px;
-	font-size: 16px;
-	padding: 8px 16px;
+.trackers {
+
+	.header {
+		position: absolute;
+	    top: -180px;
+	    right: 15px;
+	    width: 400px;
+
+		h1 {
+			display: none !important;
+		}
+
+		.dropdown {
+
+		}
+
+		.add-note {
+			width: 100%;
+			position: absolute;
+			top: 60px;
+			left: 0;
+			background: none;
+			border: none;
+			border-bottom: solid #666 2px;
+			font-size: 16px;
+			color: #333;
+			padding: 8px 8px;
+		}
+
+	}
+
 }
