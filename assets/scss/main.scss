@@ -27,4 +27,8 @@ html, body {
 
 	}
 
+	button:focus, input:focus {
+		outline:0;
+	}
+
 }

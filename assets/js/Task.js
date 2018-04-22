@@ -25,6 +25,39 @@ class Task {
             }
         }
 
+        var $todos = "";
+
+        var todos = data.todos;
+        cl('TODOS: ', todos)
+
+        if (todos != undefined) {
+
+            for (i = 0; i < todos.length; i++) {
+
+                var todo = todos[i];
+                cl(todo)
+
+                var $checked = " checked ";
+
+                if (!todo.completed) $checked = ""
+
+                $todos += '\
+                    <li>\
+                        <label>\
+                            <input type="checkbox" ' + $checked + '>\
+                            <i></i>\
+                            <span>' + todo.text + '</span>\
+                            <a>Remove</a>\
+                        </label>\
+                    </li>\
+                ';
+
+            }
+
+        }
+
+        cl($todos)
+
         $('.task-container').append('\
             <div class="task clearfix" data-id="' + data.localId + '" data-color="' + tasksTracker.color + '" data-tracker-id="' + tasksTracker.localId + '">\
                 <div class="main">\
@@ -33,14 +66,7 @@ class Task {
                 </div>\
                 <div class="list">\
                     <ul class="scroll scroll--simple">\
-                        <li class="hide">\
-                            <label>\
-                                <input type="checkbox">\
-                                <i></i>\
-                                <span>12312</span>\
-                                <a>Remove</a>\
-                            </label>\
-                        </li>\
+                        ' + $todos + '\
                     </ul>\
                     <input type="text" class="todo-new show-on-hover" placeholder="New Item">\
                     <i class="remove-task far fa-trash-alt"></i>\
@@ -48,6 +74,31 @@ class Task {
             </div>\
         ')
 
+    }
+
+    addTodo(trackerId, taskId, text, localId) {
+
+        cl('adding todo', taskId, text, localId)
+
+        server.api('/tracker/addTodo', {
+            trackerId: trackerId,
+            taskId: taskId,
+            todoId: localId,
+            text: text,
+            day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
+        }, function(success, data) {
+            cl('note added', success, data);
+            server.init();
+        })
+
+    }
+
+    removeTodo(taskId, localId) {
+        cl('removing todo', taskId, localId)
+    }
+
+    toggleTodo(taskId, localId) {
+        cl('toggling todo', taskId, localId)
     }
 
     /**
@@ -259,27 +310,27 @@ $("html").on("keypress", ".todo-new", function(e){
 	  if (s == ""){
 	    return false;
 	  }else{
-	    $(this).parent().find('ul').first().append("<li><label><input type='checkbox'><i></i><span>"+ v +"</span><a>Remove</a></label></li>");
+          var localId = "TO" + utilities.generateLocalId();
+	    $(this).parent().find('ul').first().append("<li><label data-id='" + localId + "'><input type='checkbox'><i></i><span>"+ v +"</span><a>Remove</a></label></li>");
 	    $(this).val("");
-        cl('added todo');
+        task.addTodo( $(this).parent().parent().attr('data-tracker-id'), $(this).parent().parent().attr('data-id'), v, localId );
 	  }
 	}
 });
 
 
-$("html").on("click touch", ".list li a", function(){
-	var cardId = $(this).parent().parent().parent().parent().parent().parent().attr('data-id');
+/*$("html").on("click touch", ".list li a", function(){
 	var _li = $(this).parent().parent();
+    task.removeTodo( $(this).parent().parent().parent().parent().parent().attr('data-id'), $(this).parent().attr('data-id') );
     _li.addClass("remove").stop().delay(100).slideUp("fast", function(){
       _li.remove();
-      cl('removed task')
     });
-});
+});*/
 
 $("html").on("change", ".list li input", function(e){
 	cl('test', ($(e.target).is('a')));
 	if ($(e.target).is('a')) return
-    cl('change state')
+    task.toggleTodo( $(this).parent().parent().parent().parent().parent().attr('data-id'), $(this).parent().attr('data-id') );
 });
 
 var task = new Task();

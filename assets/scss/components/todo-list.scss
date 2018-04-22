@@ -44,6 +44,7 @@
                     font-weight: 400;
                     height:16px;
                     transition: all .2s linear;
+                    display: none;
                 }
 
             }
@@ -103,6 +104,7 @@
         padding: 0;
         width: 100%;
         transition: all .2s linear;
+        padding-left: 30px;
     }
 
     ::-webkit-input-placeholder {color: #464f72;} /* WebKit browsers */
