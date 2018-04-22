@@ -34,4 +34,39 @@ router.route('/getDay')
 
     })
 
+    router.route('/getRange')
+
+        .post(function(req, res) {
+
+            var day = req.body.day;
+            var to = req.body.to;
+            var from = req.body.from;
+
+            Tracker.getAllFromUser(req.session.userId, function(err, trackers) {
+
+                for (var i = 0; i < trackers.length; i++) {
+
+                    var tracker = trackers[i];
+                    var trackerDays = tracker.days;
+                    for (trackerDay in trackerDays) {
+                        if ( (trackerDay <= to) && (trackerDay >= from) ) {
+
+                        } else {
+                            delete trackerDays[trackerDay]
+                        }
+                    }
+
+                }
+
+                res.send({
+                    data: trackers,
+                    view: 'range',
+                    from: req.body.from,
+                    tp: req.body.to
+                })
+
+            })
+
+        })
+
 module.exports = router;

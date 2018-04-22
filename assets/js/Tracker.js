@@ -1,11 +1,23 @@
 class Tracker {
 
     constructor() {
+
         this.updateInterval = null;
         this.currentTimer = null;
         this.runningTimer = null;
         this.loadedLogObjects = [];
         this.loadedTrackerObjects = [];
+        this.hexColors = {
+            "pink": "#FFB6B9",
+            "red": "#E46161",
+            "yellow": "#FFDD5C",
+            "orange": "#ECAB69",
+            "green": "#76A665",
+            "blue": "#4AA6B5",
+            "purple": "#9F609C",
+            "grey": "#928181",
+        }
+
 	}
 
     /**
@@ -451,6 +463,136 @@ class Tracker {
             }
 
         })
+
+    }
+
+    renderStats(data) {
+
+        cl('rendering stats with', data);
+
+        var trackers = data.data;
+
+        var totalTrackers = trackers.length;
+        var totalHoursTracked = 0;
+        var totalTimers = 0;
+        var totalNotes = 0;
+        var totalAssignedTimes = 0;
+        var totalTime = 0;
+        var totalTodos = 0;
+        var completedTodos = 0;
+
+        for (var i = 0; i < trackers.length; i++) {
+
+            var trackerI = trackers[i];
+            var totalHoursTrackedByTracker = 0;
+
+            for (var key in trackerI.days) {
+
+                var day = trackerI.days[key];
+
+                for (var k = 0; k < day.length; k++) {
+
+                    var entry = day[k]
+
+                    var localId = entry.localId;
+
+                    var type;
+
+                    if (localId != undefined) {
+                        type = localId.substr(0, 2);
+                    } else {
+                        type = '';
+                    }
+
+                    var j = 0;
+
+                    switch (type) {
+
+                        case "TI":
+
+                            totalTimers++;
+
+                            if (entry.notes != undefined) {
+                                totalNotes += entry.notes.length
+                            }
+
+                            if (entry.end != null) {
+
+                                var duration = utilities.secondsBetweenDates(new Date(entry.end), new Date(entry.start));
+                                totalHoursTracked += duration;
+                                totalHoursTrackedByTracker += duration;
+
+                                if (entry.taskId != undefined) {
+                                    totalTime += duration;
+                                }
+
+                            }
+
+                            break;
+
+                        case "TA":
+
+                            if (entry.todos != undefined) {
+
+                                for (j = 0; j < entry.todos.length; j++) {
+
+                                    totalTodos++;
+
+                                    if (entry.todos[j].completed)
+                                        completedTodos++
+
+                                }
+
+                            }
+
+                            if ( (entry.duration != undefined) && (entry.duration != "") ) {
+                                totalAssignedTimes += parseInt(entry.duration)
+                                console.log(entry.duration)
+                            }
+
+                            break;
+
+                        default:
+
+                            cl('state type unkonwn', day)
+
+                    }
+
+
+                }
+
+                trackerI.totalHoursTrackedByTracker = totalHoursTrackedByTracker;
+
+            }
+
+        }
+
+        $('.number[data-stat="total-trackers"]').text(totalTrackers)
+        $('.number[data-stat="total-todos"]').text(totalTodos)
+        $('.number[data-stat="completed-todos"]').text(completedTodos)
+        $('.number[data-stat="total-notes"]').text(totalNotes)
+        $('.number[data-stat="total-timers"]').text(totalTimers)
+        $('.number[data-stat="total-hours-tracked"]').text(Math.round(totalHoursTracked / 60) + "m")
+        $('.number[data-stat="total-time"]').text(Math.round(totalTime / 60) + "m")
+        $('.number[data-stat="total-assigned-times"]').text(Math.round(totalAssignedTimes) + "m")
+
+        cl('render done', trackers);
+
+        var minutes = [];
+        var names = [];
+        var colors = [];
+
+        for (i = 0; i < trackers.length; i++) {
+
+            trackerI = trackers[i];
+
+            minutes.push(trackerI.totalHoursTrackedByTracker/60);
+            names.push(trackerI.name);
+            colors.push(tracker.hexColors[trackerI.color]);
+
+        }
+
+        timeline.reloadCharts(names, minutes, colors)
 
     }
 

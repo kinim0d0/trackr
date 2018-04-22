@@ -517,7 +517,123 @@ function stopTrackers(req, user) {
 
 function startTracker(req, user, trackerName) {
 
-    Tracker.find({'userId': user._id, 'name': trackerName}, function(err, trackers) {
+    Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+        for (var i = 0; i < trackers.length; i++) {
+
+            var tracker = trackers[i];
+            var todayDays = tracker.days[day];
+
+            if (todayDays == undefined) {
+                continue
+            }
+
+            for (var j = 0; j < todayDays.length; j++) {
+                if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
+                    todayDays[j].end = Date.now();
+                    tracker.markModified('days');
+                    tracker.save(req, function(err, tracker) {
+                        console.log('stopped timer')
+                    })
+                }
+            }
+
+        }
+
+        var day = daysFromEpoch();
+        var found = false;
+
+        for (var i = 0; i < trackers.length; i++) {
+
+            var tracker = trackers[i];
+            var todayDays = tracker.days[day];
+
+            if (todayDays == undefined) {
+                continue
+            }
+
+            for (var j = 0; j < todayDays.length; j++) {
+
+                if (todayDays[j].name == trackerName) {
+
+                    //console.log('found by taskname');
+
+                    todayDays.push({
+                        start: Date.now(),
+                        end: null,
+                        localId: "TI" + generateLocalId(),
+                        day: day,
+                        trackerId: tracker.localId,
+                        taskId: todayDays[j].localId
+                    })
+
+                    tracker.markModified('days');
+
+                    tracker.save(req, function(err, data) {
+
+                        if (err) console.log('failed to save new timer', err);
+
+                        sendMessageFb(user.facebookId, "Started task");
+
+                    })
+
+                    found = true;
+                    return
+
+                }
+
+            }
+
+        }
+
+        // No task match today;
+        if (!found) {
+
+            for (var i = 0; i < trackers.length; i++) {
+
+                var tracker = trackers[i];
+
+                if (tracker.name == trackerName) {
+
+                    console.log('found by trackername');
+                    found = true;
+
+                    var trackerDay = [];
+
+                    if (typeof tracker.days[day] != 'undefined') {
+                        // Creating a day container
+                        trackerDay = tracker.days[day];
+                    }
+
+                    trackerDay.push({
+                        start: Date.now(),
+                        end: null,
+                        localId: "TI" + generateLocalId(),
+                        day: day,
+                        trackerId: tracker.localId
+                    })
+
+                    tracker.days[day] = trackerDay;
+                    tracker.markModified('days');
+
+                    tracker.save(req, function(err, data) {
+
+                        if (err) console.log('failed to save new timer', err);
+
+                        sendMessageFb(user.facebookId, "Started tracker");
+
+                    })
+
+
+                }
+
+            }
+
+        }
+
+    })
+
+    /*Tracker.find({'userId': user._id, 'name': trackerName}, function(err, trackers) {
 
         if (err) console.log(err);
 
@@ -530,7 +646,7 @@ function startTracker(req, user, trackerName) {
             var tracker = trackers[0];
 
             var trackerId = tracker.localId;
-            var day = daysFromEpoch();
+
             var timerId = "TI" + generateLocalId()
 
             console.log(trackerId, day, '----')
@@ -603,9 +719,7 @@ function startTracker(req, user, trackerName) {
 
         }
 
-    })
-
-    //
+    })*/
 
 }
 
@@ -726,6 +840,10 @@ add todo {todo} to {task}  Add a todo to a task\u000A\
                                     } else if (text.substr(0, 4) == "done") {
 
                                         completeTodo(req, user, text.substr(4, text.length-1));
+
+                                    } else {
+
+                                        sendMessageFb(user.facebookId, "I didn't catch that, type info to see all the things I can do");
 
                                     }
 

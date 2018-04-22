@@ -66,7 +66,6 @@ class Server {
 	/**
 	 *	Starts a sync when the browser loaded
 	 */
-
 	 init(offset) {
 
 		 var day = utilities.daysFromEpochToDate(timeline.currentDateFrom);
@@ -87,6 +86,25 @@ class Server {
 		});
 
  	}
+
+	initRange() {
+
+		var from = utilities.daysFromEpochToDate(timeline.currentDateFrom);
+		var to = utilities.daysFromEpochToDate(timeline.currentDateTo);
+
+		server.api("/sync/getRange", { from: from, to: to  }, function(success, data) {
+
+			cl('SERVER GOT RANGE', data)
+
+			$('.loader-wrapper').addClass('hide');
+
+			$('body').attr('data-view', data.view);
+
+			tracker.renderStats(data);
+
+		});
+
+	}
 
 	/**
 	 *	Syncs the client's data with the database

@@ -16,7 +16,7 @@ class Timeline {
     /**
      *  Reloads the charts with the data in the current range
      */
-    reloadCharts() {
+    reloadCharts(names, minutes, colors) {
 
         setTimeout(function() {
 
@@ -28,15 +28,11 @@ class Timeline {
                 data: {
 
                     datasets: [{
-                        data: [10, 25, 30],
-                        backgroundColor: ['#FFDD5C', '#76A665', '#928181']
+                        data: minutes,
+                        backgroundColor: colors
                     }],
 
-                    labels: [
-                        'Work',
-                        'Study',
-                        'Movies'
-                    ]
+                    labels: names
 
                 },
 
@@ -75,8 +71,8 @@ class Timeline {
         var $singleRange = $('.date-range .single-range');
         var $multiRange = $('.date-range .multi-range');
 
-        var $multiDaySections = $('section.stats, section.tracker-stats, section.task-stats');
-        var $singleDaySections = $('section.trackers, section.tasks')
+        var $multiDaySections = $('section.stats');
+        var $singleDaySections = $('section.trackers, section.tasks, section.log')
 
         if (typeof dateFrom == 'string') {
 
@@ -116,6 +112,8 @@ class Timeline {
             $singleDaySections.addClass('hide')
 
             timeline.reloadCharts();
+
+            server.initRange();
 
         } else {
 
@@ -167,6 +165,8 @@ $("html").on("click touch", ".back-to-day", function (e) {
     e.stopImmediatePropagation();
 
     timeline.updateTimelineDate(moment())
+
+    server.init();
 
 })
 
