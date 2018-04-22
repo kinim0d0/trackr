@@ -26,14 +26,14 @@ class Task {
         }
 
         $('.task-container').append('\
-            <div class="task clearfix" data-id="' + data.localId + '" data-color="' + tasksTracker.color + '">\
+            <div class="task clearfix" data-id="' + data.localId + '" data-color="' + tasksTracker.color + '" data-tracker-id="' + tasksTracker.localId + '">\
                 <div class="main">\
                     <p class="name">' + data.name + '</p>\
                     <p class="timeleft">3 hours</p>\
                 </div>\
                 <div class="list">\
                     <ul class="scroll scroll--simple">\
-                        <li>\
+                        <li class="hide">\
                             <label>\
                                 <input type="checkbox">\
                                 <i></i>\
@@ -43,6 +43,7 @@ class Task {
                         </li>\
                     </ul>\
                     <input type="text" class="todo-new show-on-hover" placeholder="New Item">\
+                    <i class="remove-task far fa-trash-alt"></i>\
                 </div>\
             </div>\
         ')
@@ -235,6 +236,20 @@ $h.on('click touch', '.save-task-btn', function(e) {
 
 })
 
+$("html").on("click touch", ".remove-task", function(e){
+
+    var $task = $(this).parent().parent();
+
+    server.api('/tracker/removeTask', {
+        trackerId: $task.attr('data-tracker-id'),
+        day: utilities.daysFromEpochToDate(timeline.currentDateFrom),
+        taskId: $task.attr('data-id')
+    }, function(success, data) {
+        cl('removed task', success, data);
+        server.init();
+    })
+
+})
 
 $("html").on("keypress", ".todo-new", function(e){
 	var code = (e.keyCode ? e.keyCode : e.which);

@@ -9,6 +9,7 @@
 		border-radius: 12px;
 		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 		overflow: hidden;
+		position: relative;
 
 		.main {
 			width: 194px;
@@ -40,6 +41,14 @@
 			width: calc(100% - 194px);
 			float: left;
 			padding: 16px;
+		}
+
+		.remove-task {
+			position: absolute;
+			bottom: 14px;
+			right: 12px;
+			font-size: 20px;
+			cursor: pointer;
 		}
 
 	}

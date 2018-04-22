@@ -45,7 +45,7 @@ db.once('open', function() {
 
 app.get("/dashboard*", function(req, res) {
 
- if (req.session.userId == undefined) { req.session.userId = "5adb2d8e3889122f299d96b9" }
+ if (req.session.userId == undefined) { req.session.userId = "5adc4367b42609538f7dde39" }
 
   if (req.session.userId == undefined) {
 

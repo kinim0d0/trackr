@@ -1,5 +1,9 @@
 var Tracker = require('../schemas/Tracker');
 
+function generateLocalId() {
+	return new Date().getTime().toString();
+}
+
 function sendMessageFb(sender, text) {
 
     //let sender = event.sender.id;
@@ -72,7 +76,7 @@ function startTracker(user, trackerName) {
 
             var trackerId = tracker.localId;
             var day = daysFromEpoch();
-            var timerId = '123132132131313'
+            var timerId = "TI" + generateLocalId()
 
             console.log(trackerId, day, '----')
 

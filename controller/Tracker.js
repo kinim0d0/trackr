@@ -13,6 +13,60 @@ daysFromEpoch = function() {
 	return days
 }
 
+router.route('/removeTask')
+
+    .post(function(req, res) {
+
+        var trackerId = req.body.trackerId;
+        var day = req.body.day;
+        var taskId = req.body.taskId;
+
+        console.log(trackerId, day, taskId);
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            console.log('trackers: ', trackers);
+
+            var trackerDay = [];
+
+            var tracker = trackers[0];
+
+            if (typeof tracker.days[day] != 'undefined') {
+                // Creating a day container
+                trackerDay = tracker.days[day];
+            }
+
+            for (var i = 0; i < trackerDay.length; i++) {
+
+                if (trackerDay[i].localId == taskId) {
+
+                    trackerDay.splice(i, 1);
+
+                }
+
+            }
+
+            tracker.markModified('days');
+
+            console.log('final: ', tracker);
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to save new timer', err);
+
+            })
+
+            res.send({
+                success: true,
+                data: 'saved timer'
+            });
+
+        })
+
+    })
+
 router.route('/addTask')
 
     .post(function(req, res) {
@@ -164,8 +218,6 @@ router.route('/addNewTimer')
 
         console.log(trackerId, day, '----')
 
-        // STOP any running trackers
-
         Tracker.getAllFromUser(req.session.userId, function(err, trackers) {
 
             console.log('sto[pp]', trackers)
@@ -192,8 +244,6 @@ router.route('/addNewTimer')
             }
 
         })
-
-        //return;
 
         Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
 
@@ -337,13 +387,9 @@ router.route('/edit')
 
         } else {
 
-            //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
-
             Tracker.findByLocalId({localId: tracker.localId, userId: req.session.userId}, function(err, trackers) {
 
                 if (trackers.length == 0) {
-
-                    console.log("not found, create");
 
                     var newTracker = new Tracker(tracker);
 
@@ -356,21 +402,9 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        var log = new Log({
-                            localId: newTracker.localId,
-                            userId: req.session.userId,
-                            contentId: newTracker._id
-                        })
-
-                        log.save(req, function(err, log) {
-
-            				if (err) console.log(err);
-
-            				res.send({
-            					success: true
-            				});
-
-            			})
+        				res.send({
+        					success: true
+        				});
 
                     })
 
@@ -385,21 +419,9 @@ router.route('/edit')
 
                         if (err) console.log(err);
 
-                        var log = new Log({
-                            localId: oldTracker.localId,
-                            userId: req.session.userId,
-                            contentId: oldTracker._id
-                        })
-
-                        log.save(req, function(err, log) {
-
-                            if (err) console.log(err);
-
-                            res.send({
-                                success: true
-                            });
-
-                        })
+                        res.send({
+                            success: true
+                        });
 
                     })
 
@@ -419,10 +441,6 @@ router.route('/edit')
 
             var timer = req.body;
             var error;
-
-            console.log(timer)
-
-            //if (req.session.userId == undefined) { req.session.userId = "5aae59242c44323f9c8763b1"; }
 
             Tracker.findByLocalId({localId: timer.trackerId, userId: req.session.userId}, function(err, trackers) {
 
@@ -477,5 +495,9 @@ router.route('/edit')
             })
 
         })
+
+function addNewTracker() {
+
+}
 
 module.exports = router;
