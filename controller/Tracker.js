@@ -3,7 +3,6 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
-var Log = require('../schemas/Log');
 
 daysFromEpoch = function() {
 	var current_date = new Date();
@@ -405,7 +404,8 @@ router.route('/addNewTimer')
                 end: null,
                 localId: timerId,
                 day: day,
-                trackerId: tracker.localId
+                trackerId: tracker.localId,
+                taskId: req.body.taskId
             })
 
             tracker.days[day] = trackerDay;

@@ -3,7 +3,6 @@ var router = express.Router();
 var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var Tracker = require('../schemas/Tracker');
-var Log = require('../schemas/Log');
 
 router.route('/getDay')
 
@@ -29,23 +28,6 @@ router.route('/getDay')
                 data: trackers,
                 view: 'day',
                 day: req.body.day
-            })
-
-        })
-
-    })
-
-router.route('/')
-
-    .post(function(req, res) {
-
-        Log.getUpdatesSince({ lastSync: req.body.lastSync, userId: req.session.userId }, function(err, log) {
-
-            if (err) console.error(err);
-
-            res.send({
-                lastSync: Date.now(),
-                log: log
             })
 
         })

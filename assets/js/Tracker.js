@@ -20,7 +20,7 @@ class Tracker {
             note: note
         }, function(success, data) {
             cl('note added', success, data);
-            server.init();
+            //server.init();
         })
 
     }
@@ -45,36 +45,18 @@ class Tracker {
                 timer: tracker.currentTimer
             }, function(success, data) {
                 cl('timer stopped', success, data);
-                server.init();
+                //server.init();
             })
 
         } else {
 
-            // Starting a new timer
-
-            if (tracker.runningTimer == null) {
-
-                server.api('/tracker/addNewTimer', {
-                    trackerId: localId,
-                    localId: "TI" + utilities.generateLocalId()
-                }, function(success, data) {
-                    cl('timer added', success, data);
-                    server.init();
-                })
-
-            } else {
-
-                server.api('/tracker/stopTimer', {
-                    trackerId: localId,
-                    timer: tracker.currentTimer
-                }, function(success, data) {
-                    cl('timer stopped', success, data);
-                    server.init();
-                })
-
-                // THen add TODO
-
-            }
+            server.api('/tracker/addNewTimer', {
+                trackerId: localId,
+                localId: "TI" + utilities.generateLocalId()
+            }, function(success, data) {
+                cl('timer added', success, data);
+                //server.init();
+            })
 
         }
 
@@ -445,7 +427,7 @@ class Tracker {
 
             cl("Tracker saved to server", success, data);
 
-            server.init();
+            //server.init();
 
             if (data["success"] == true) {
 
@@ -619,7 +601,7 @@ $h.on('click touch', '.remove-tracker-btn', function(e) {
         trackerId: localId,
     }, function(success, data) {
         cl('tracker removed', success, data);
-        server.init();
+        //server.init();
     })
 
 })

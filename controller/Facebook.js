@@ -35,7 +35,7 @@ function getTodos(req, user, note) {
 
         if (trackers.length == 0) {
 
-            sendMessageFb(user.facebookId, "You don't have any todos for today");
+            sendMessageFb(user.facebookId, "You don't have any trackers yet");
 
         } else {
 
@@ -52,8 +52,6 @@ function getTodos(req, user, note) {
                 for (var j = 0; j < todayDays.length; j++) {
 
                     if (todayDays[j].todos != undefined) {
-
-                        console.log('FOUND ONE');
 
                         msg += "*" + todayDays[j].name + "* (" + todayDays[j].todos.length + ")\u000A"
 
@@ -139,8 +137,6 @@ function addNote(req, user, note) {
 }
 
 function completeTodo(req, user, todo) {
-
-    console.log('completeing todo', todo)
 
     var todo = todo.trim();
 
@@ -363,6 +359,22 @@ function addTask(req, user, text) {
                     todayDays = [];
                 }
 
+                duration = parseInt(duration);
+
+                if (isNaN(duration)) {
+                    sendMessageFb(user.facebookId, "Enter a valid duration");
+                    return;
+                }
+
+                for (var i = 0; i < todayDays.length; i++) {
+
+                    if (todayDays[i].name == taskName) {
+                        sendMessageFb(user.facebookId, "You already have a task named " + taskName);
+                        return;
+                    }
+
+                }
+
                 todayDays.push({
                     name: taskName,
                     localId: "TA" + generateLocalId(),
@@ -400,6 +412,23 @@ function addTracker(req, user, trackerName) {
         sendMessageFb(user.facebookId, "Enter a tracker name");
 
     } else {
+
+        Tracker.getAllFromUser(function(err, trackers) {
+
+            if (trackers.length != 0) {
+
+                for (var i = 0; i < trackers.length; i++) {
+
+                    if (trackers[i].name == trackerName) {
+                        sendMessageFb(user.facebookId, "You already have a tracker named " + trackerName);
+                        return
+                    }
+
+                }
+
+            }
+
+        })
 
         var tracker = {
             name: trackerName,

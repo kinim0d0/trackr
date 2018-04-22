@@ -88,7 +88,7 @@ class Task {
             day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
         }, function(success, data) {
             cl('note added', success, data);
-            server.init();
+            //server.init();
         })
 
     }
@@ -110,7 +110,7 @@ class Task {
             day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
         }, function(success, data) {
             cl('todo toggled', success, data);
-            server.init();
+            //erver.init();
         })
 
     }
@@ -260,7 +260,7 @@ class Task {
             day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
         }, function(success, data) {
             cl('note added', success, data);
-            server.init();
+            //server.init();
         })
 
     }
@@ -316,7 +316,7 @@ $("html").on("click touch", ".remove-task", function(e){
         taskId: $task.attr('data-id')
     }, function(success, data) {
         cl('removed task', success, data);
-        server.init();
+        //server.init();
     })
 
 })
@@ -337,6 +337,21 @@ $("html").on("keypress", ".todo-new", function(e){
 	}
 });
 
+$("html").on("click touch", ".task .main", function(){
+
+    var trackerId = $(this).parent().attr('data-tracker-id');
+    var taskId = $(this).parent().attr('data-id');
+    cl('triggering tracker by task', trackerId);
+
+    server.api('/tracker/addNewTimer', {
+        trackerId: trackerId,
+        localId: "TI" + utilities.generateLocalId(),
+        taskId: taskId
+    }, function(success, data) {
+        cl('timer added', success, data);
+    })
+
+})
 
 /*$("html").on("click touch", ".list li a", function(){
 	var _li = $(this).parent().parent();
