@@ -82,6 +82,86 @@ function addNote(user, note) {
 
 }
 
+function addTask(user, text) {
+
+    var text = text.trim();
+
+    if ( (text.indexOf(' to ') == -1) || (text.indexOf(' with ') == -1) ) {
+
+        sendMessageFb(user.facebookId, "Please use this form to add a new task: add task {task} to {tracker} with {mins}");
+
+    } else {
+
+        text = text.split(" ");
+
+        var trackerName = "";
+        var taskName = "";
+        var duration = null;
+        var i = 2;
+
+        while (text[i] != "to") {
+            taskName += text[i] + " "
+            i++
+        }
+
+        taskName = taskName.trim();
+        i++;
+
+        while (text[i] != "with") {
+            trackerName += text[i] + " "
+            i++
+        }
+
+        //taskName = taskName.replace("with", "");
+        trackerName = trackerName.trim();
+
+        duration = text[++i];
+
+        Tracker.find({'userId': user._id, 'name': trackerName}, function(err, trackers) {
+
+            if (trackers.length == 0) {
+
+                sendMessageFb(user.facebookId, "You don't have a tracker named " + trackerName);
+
+            } else {
+
+                var tracker = trackers[0];
+
+                var day = daysFromEpoch();
+                var todayDays = tracker.days[day];
+
+                if (todayDays == undefined) {
+                    todayDays = [];
+                }
+
+                todayDays.push({
+                    name: taskName,
+                    localId: "TA" + generateLocalId(),
+                    trackerId: tracker.localId,
+                    deleted: false,
+                    duration: duration
+                })
+
+                tracker.days[day] = todayDays;
+
+                tracker.markModified('days');
+
+                tracker.save(function(err, data) {
+
+                    if (err) console.log('failed to save new timer', err);
+
+                    sendMessageFb(user.facebookId, "Task added");
+
+                })
+
+            }
+
+        })
+
+    }
+
+}
+
 function addTracker(user, trackerName) {
 
     trackerName = trackerName.trim();
@@ -338,15 +418,16 @@ module.exports = {
 
                                     if (text == "info") {
                                         msg = '\
-Here are all the things I can do: \u000A\
-Start a timer - start {Tracker Name}\u000A\
-Stop the currently running timer - stop\u000A\
-Add a note with the current timestamp to the running tracker - note {note}\u000A\
-Get a list of all your trackers - trackers\u000A\
-Get all todos for today - todos\u000A\
-Create a new time tracker - create {Tracker Name}\u000A\
-Create a new task for today - add {Task Name}\u000A\
-Add a todo to a task - add {todo} to {task}\u000A\
+Here are all the things I can do: \u000A\u000A\
+start {name}              Start a timer\u000A\
+stop                          Stop the currently running timer\u000A\
+trackers                     List all your trackers\u000A\
+note {note}                Add a note to the running tracker\u000A\
+trackers                    Get a list of all your trackers\u000A\
+todos                        Get all todos for today\u000A\
+create {name}           Create a new time tracker\u000A\
+add task {task} to {tracker} with {mins}      Create a new task for today\u000A\
+add todo {todo} to {task}  Add a todo to a task\u000A\
                                         ';
                                         sendMessageFb(user.facebookId, msg);
                                     } else if (text.substr(0, 5) == "start") {
@@ -370,6 +451,10 @@ Add a todo to a task - add {todo} to {task}\u000A\
                                     } else if (text.substr(0, 6) == "create") {
 
                                         addTracker(user, text.substr(6, text.length-1));
+
+                                    } else if (text.substr(0, 8) == "add task") {
+
+                                        addTask(user, text);
 
                                     }
 

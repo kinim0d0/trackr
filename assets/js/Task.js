@@ -143,6 +143,10 @@ class Task {
                     <input class="name" type="text" value="' + taskName + '">\
                 </div>\
                 <div class="form-group">\
+                    <label>Duration (mins)</label>\
+                    <input class="duration" type="text">\
+                </div>\
+                <div class="form-group">\
                     <label>Tracker</label>\
                     <select>\
                         ' + trackersDOM + '\
@@ -292,7 +296,8 @@ $h.on('click touch', '.save-task-btn', function(e) {
         localId: localId,
         trackerId: $this.find('select').first().find('option:selected').attr('data-value'),
         deleted: false,
-        todos: []
+        todos: [],
+        duration: $this.find("input.duration").first().val(),
     }
 
     task.save(data);
