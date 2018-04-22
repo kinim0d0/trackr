@@ -27,7 +27,7 @@ function sendMessageFb(sender, text) {
 
 }
 
-function getTodos(user, note) {
+function getTodos(req, user, note) {
 
     var msg = "Here are your todos for today \u000A\u000A"
 
@@ -83,7 +83,7 @@ function getTodos(user, note) {
 
 }
 
-function addNote(user, note) {
+function addNote(req, user, note) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
 
@@ -120,7 +120,7 @@ function addNote(user, note) {
                     todayDays[j].notes = notes;
 
                     tracker.markModified('days');
-                    tracker.save(function(err, tracker) {
+                    tracker.save(req, function(err, tracker) {
                         sendMessageFb(user.facebookId, "Noted");
                     })
 
@@ -138,7 +138,7 @@ function addNote(user, note) {
 
 }
 
-function completeTodo(user, todo) {
+function completeTodo(req, user, todo) {
 
     console.log('completeing todo', todo)
 
@@ -185,7 +185,7 @@ function completeTodo(user, todo) {
 
                                     tracker.markModified('days');
 
-                                    tracker.save(function(err, tracker) {
+                                    tracker.save(req, function(err, tracker) {
 
                                         sendMessageFb(user.facebookId, "Crossed it off the list");
 
@@ -209,7 +209,7 @@ function completeTodo(user, todo) {
 
 }
 
-function addTodo(user, text) {
+function addTodo(req, user, text) {
 
     var text = text.trim();
 
@@ -286,7 +286,7 @@ function addTodo(user, text) {
 
                         tracker.markModified('days');
 
-                        tracker.save(function(err, tracker) {
+                        tracker.save(req, function(err, tracker) {
 
                             sendMessageFb(user.facebookId, "Added todo");
 
@@ -311,7 +311,7 @@ function addTodo(user, text) {
 
 }
 
-function addTask(user, text) {
+function addTask(req, user, text) {
 
     var text = text.trim();
 
@@ -375,7 +375,7 @@ function addTask(user, text) {
 
                 tracker.markModified('days');
 
-                tracker.save(function(err, data) {
+                tracker.save(req, function(err, data) {
 
                     if (err) console.log('failed to save new timer', err);
 
@@ -391,7 +391,7 @@ function addTask(user, text) {
 
 }
 
-function addTracker(user, trackerName) {
+function addTracker(req, user, trackerName) {
 
     trackerName = trackerName.trim();
 
@@ -415,7 +415,7 @@ function addTracker(user, trackerName) {
 
         var newTracker = new Tracker(tracker);
 
-        newTracker.save(function(err) {
+        newTracker.save(req, function(err) {
 
             if (err) console.log(err);
 
@@ -427,7 +427,7 @@ function addTracker(user, trackerName) {
 
 }
 
-function getTrackers(user) {
+function getTrackers(req, user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
 
@@ -453,7 +453,7 @@ function getTrackers(user) {
 
 }
 
-function stopTrackers(user) {
+function stopTrackers(req, user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
 
@@ -472,7 +472,7 @@ function stopTrackers(user) {
                 if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
                     todayDays[j].end = Date.now();
                     tracker.markModified('days');
-                    tracker.save(function(err, tracker) {
+                    tracker.save(req, function(err, tracker) {
                         console.log('stopped timer')
                     })
                 }
@@ -486,7 +486,7 @@ function stopTrackers(user) {
 
 }
 
-function startTracker(user, trackerName) {
+function startTracker(req, user, trackerName) {
 
     Tracker.find({'userId': user._id, 'name': trackerName}, function(err, trackers) {
 
@@ -521,7 +521,7 @@ function startTracker(user, trackerName) {
                         if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
                             todayDays[j].end = Date.now();
                             tracker.markModified('days');
-                            tracker.save(function(err, tracker) {
+                            tracker.save(req, function(err, tracker) {
                                 console.log('stopped timer')
                             })
                         }
@@ -562,7 +562,7 @@ function startTracker(user, trackerName) {
 
                 console.log('final: ', tracker);
 
-                tracker.save(function(err, data) {
+                tracker.save(req, function(err, data) {
 
                     if (err) console.log('failed to save new timer', err);
 
@@ -614,7 +614,7 @@ module.exports = {
 
                                                 user.facebookId = event.sender.id;
 
-                                                user.save(function(err, user) {
+                                                user.save(req, function(err, user) {
 
                                                     sendMessageFb(event.sender.id, "Successfully authenticated");
                                                     sendMessageFb(event.sender.id, "Type 'info' to see all the options");
@@ -663,40 +663,40 @@ add todo {todo} to {task}  Add a todo to a task\u000A\
                                     } else if (text.substr(0, 5) == "start") {
 
                                         var trackerName = text.substr(6, text.length-1);
-                                        startTracker(user, trackerName)
+                                        startTracker(req, user, trackerName)
 
                                     } else if (text == "stop") {
 
-                                        stopTrackers(user);
+                                        stopTrackers(req, user);
 
                                     } else if (text.substr(0, 4) == "note") {
 
                                         var note = text.substr(5, text.length-1);
-                                        addNote(user, note);
+                                        addNote(req, user, note);
 
                                     } else if (text == "trackers") {
 
-                                        getTrackers(user);
+                                        getTrackers(req, user);
 
                                     } else if (text.substr(0, 6) == "create") {
 
-                                        addTracker(user, text.substr(6, text.length-1));
+                                        addTracker(req, user, text.substr(6, text.length-1));
 
                                     } else if (text.substr(0, 8) == "add task") {
 
-                                        addTask(user, text);
+                                        addTask(req, user, text);
 
                                     } else if (text == "todos") {
 
-                                        getTodos(user);
+                                        getTodos(req, user);
 
                                     } else if (text.substr(0, 8) == "add todo") {
 
-                                        addTodo(user, text);
+                                        addTodo(req, user, text);
 
                                     } else if (text.substr(0, 4) == "done") {
 
-                                        completeTodo(user, text.substr(4, text.length-1));
+                                        completeTodo(req, user, text.substr(4, text.length-1));
 
                                     }
 

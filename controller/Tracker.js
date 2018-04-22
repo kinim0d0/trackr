@@ -375,7 +375,7 @@ router.route('/addNewTimer')
                     if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
                         todayDays[j].end = Date.now();
                         tracker.markModified('days');
-                        tracker.save(function(err, tracker) {
+                        tracker.save(req, function(err, tracker) {
                             console.log('stopped timer')
                         })
                     }
@@ -538,7 +538,7 @@ router.route('/edit')
                         0: null
                     };
 
-                    newTracker.save(function(err) {
+                    newTracker.save(req, function(err) {
 
                         if (err) console.log(err);
 
@@ -555,7 +555,7 @@ router.route('/edit')
                     oldTracker.color = tracker.color;
                     oldTracker.deleted = tracker.deleted;
 
-                    oldTracker.save(function(err) {
+                    oldTracker.save(req, function(err) {
 
                         if (err) console.log(err);
 
@@ -608,7 +608,7 @@ router.route('/edit')
 
                     tracker.markModified('days');
 
-                    tracker.save(function(err, tracker) {
+                    tracker.save(req, function(err, tracker) {
 
                         if (err) console.log(err);
 

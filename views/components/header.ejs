@@ -13,7 +13,7 @@
 	<meta charset="UTF-8">
 </head>
 
-<body data-page="<%= section %>">
+<body data-page="<%= section %>" data-user-id=<% if (session.userId != undefined) { %> <%=session.userId %> <% } %>>
 
 	<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 		<div class="container">

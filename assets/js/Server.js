@@ -164,7 +164,7 @@ class Server {
 	 */
 	connectToSocket() {
 
-		return;
+		//return;
 
 		if (server.socketConnection == true) {
 			return;
@@ -173,7 +173,7 @@ class Server {
 		server.socketConnection = true;
 
 		cl("setting up socketIO");
-		var socket = io('www.doentry.com:3002')
+		var socket = io('https://www.doentry.com/')
 
 		socket.on('realTimeSyncStarted', function(data){
 			cl("Connected to socket");
@@ -185,17 +185,22 @@ class Server {
 			server.socketConnection = false;
 			setTimeout(function() {
 				server.connectToSocket();
-			}, 5000);
+			}, 10000);
 		} );
 
-		socket.emit('startRealTimeSync', {
-			userId: '5aae59242c44323f9c8763b1',
-			sessionId: '123'
-		});
+		var userId = $('body').attr('data-user-id');
+
+		if ( (userId != "") && (userId != undefined) ) {
+
+			socket.emit('startRealTimeSync', {
+				userId: userId
+			});
+
+		}
 
 		socket.on('update', function(update){
 		 	setTimeout(function(){
-		 		server.sync();
+		 		server.init();
 		 	}, 300)
 		});
 

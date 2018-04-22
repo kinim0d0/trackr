@@ -87,6 +87,27 @@ trackerSchema.statics.getAllFromUser = function(userId, cb) {
 
 }
 
+trackerSchema.pre('save', function(next, req, callback) {
+
+    console.log("SENDING IO: ");
+    var io = req.app.locals.io;
+    var connectedUser = req.app.locals.connections[this.userId];
+
+    if (connectedUser != undefined) {
+        console.log("SENDING PACKET TO ");
+        console.log(connectedUser);
+        for(var i = 0; i < connectedUser.length; i++) {
+            var connectedUserInstance = connectedUser[i];
+            if (io.sockets.connected[connectedUserInstance] == undefined) continue;
+            io.sockets.connected[connectedUserInstance].emit('update', {
+                update : true
+            });
+        }
+    }
+
+    next();
+
+});
 
 var trackerModel = mongoose.model("Tracker", trackerSchema);
 
