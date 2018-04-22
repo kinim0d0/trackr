@@ -27,6 +27,62 @@ function sendMessageFb(sender, text) {
 
 }
 
+function getTodos(user, note) {
+
+    var msg = "Here are your todos for today \u000A\u000A"
+
+    Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+        if (trackers.length == 0) {
+
+            sendMessageFb(user.facebookId, "You don't have any todos for today");
+
+        } else {
+
+            for (var i = 0; i < trackers.length; i++) {
+
+                var tracker = trackers[i];
+                var day = daysFromEpoch();
+                var todayDays = tracker.days[day];
+
+                if (todayDays == undefined) {
+                    continue
+                }
+
+                for (var j = 0; j < todayDays.length; j++) {
+
+                    if (todayDays[j].todos != undefined) {
+
+                        console.log('FOUND ONE');
+
+                        msg += "*" + todayDays[j].name + "* (" + todayDays[j].todos.length + ")\u000A"
+
+                        for (var k = 0; k < todayDays[j].todos.length; k++) {
+
+                            if (todayDays[j].todos[k].completed) {
+                                msg += "~" + todayDays[j].todos[k].text + "~\u000A";
+                            } else {
+                                msg += todayDays[j].todos[k].text + "\u000A";
+                            }
+
+                        }
+
+                        msg += "\u000A";
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        sendMessageFb(user.facebookId, msg);
+
+    })
+
+}
+
 function addNote(user, note) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -79,6 +135,108 @@ function addNote(user, note) {
         }
 
     })
+
+}
+
+function addTodo(user, text) {
+
+    var text = text.trim();
+
+    if (text.indexOf(' to ') == -1) {
+
+        sendMessageFb(user.facebookId, "Please use this form to add a new todo: add todo {todo} to {task}");
+
+    } else {
+
+        text = text.substr(8, text.length-1);
+        text = text.trim();
+        text = text.split(" ");
+
+        console.log('adding to do', text)
+
+        var taskName = "";
+        var todoName = "";
+        var i = 0;
+
+        while (text[i] != "to") {
+            todoName += text[i] + " "
+            i++
+        }
+
+        todoName = todoName.trim();
+        i++;
+
+        while (i < text.length) {
+            taskName += text[i] + " ";
+            i++;
+        }
+
+        taskName = taskName.trim();
+
+        console.log('adding todo', taskName, todoName);
+
+        Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+            if (trackers.length == 0) {
+
+                sendMessageFb(user.facebookId, "You have no trackers");
+
+            } else {
+
+                var tracker = trackers[0];
+
+                var day = daysFromEpoch();
+                var todayDays = tracker.days[day];
+
+                if (todayDays == undefined) {
+                    todayDays = [];
+                }
+
+                var found = false;
+
+                for (var j = 0; j < todayDays.length; j++) {
+
+                    var todos = [];
+
+                    if (todayDays[j].name == taskName) {
+
+                        found = true;
+
+                        if (todayDays[j].todos != undefined) {
+                            todos = todayDays[j].todos;
+                        }
+
+                        todos.push({
+                            completed: false,
+                            text: todoName
+                        })
+
+                        todayDays[j].todos = todos;
+
+                        tracker.markModified('days');
+
+                        tracker.save(function(err, tracker) {
+
+                            sendMessageFb(user.facebookId, "Added todo");
+
+                        })
+
+                    }
+
+                }
+
+            }
+
+            if (!found) {
+
+                sendMessageFb(user.facebookId, "I couldn't find " + taskName);
+
+            }
+
+        })
+
+    }
+
 
 }
 
@@ -455,6 +613,14 @@ add todo {todo} to {task}  Add a todo to a task\u000A\
                                     } else if (text.substr(0, 8) == "add task") {
 
                                         addTask(user, text);
+
+                                    } else if (text == "todos") {
+
+                                        getTodos(user);
+
+                                    } else if (text.substr(0, 8) == "add todo") {
+
+                                        addTodo(user, text);
 
                                     }
 
