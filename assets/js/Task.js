@@ -12,11 +12,12 @@ class Task {
      *
      *  Renders a task element
      */
-    render(data) {
+    render(data, taskTimes) {
+
+        cl('TASK TIMES: ', taskTimes);
 
         var tasksTracker = null;
         cl('www', data, tracker.loadedTrackerObjects, tracker.loadedTrackerObjects.length)
-
 
         for (var i = 0; i < tracker.loadedTrackerObjects.length; i++) {
             cl(tracker.loadedTrackerObjects[i].localId, 'vs', data.trackerId)
@@ -56,13 +57,34 @@ class Task {
 
         }
 
-        cl($todos)
+        var totalTimeGiven = parseInt(data.duration) * 60;
+        var totalTimeSpent = 0
+
+        for (i = 0; i < taskTimes.length; i++) {
+
+            if (taskTimes[i].taskId == data.localId) {
+                if (taskTimes[i].end == null)
+                    taskTimes[i].end = new Date()
+                taskTimes[i].start = new Date(taskTimes[i].start)
+                taskTimes[i].end = new Date(taskTimes[i].end)
+                var diff = utilities.secondsBetweenDates(taskTimes[i].start, taskTimes[i].end);
+                totalTimeSpent -= diff;
+            }
+
+        }
+
+        var totalTimeLeft = Math.round(( totalTimeGiven - totalTimeSpent ) / 60);
+        var leftStr = totalTimeLeft + ' min(s) left'
+
+        if (totalTimeLeft < 0) {
+            leftStr = 'overdue by' + totalTimeLeft + ' min(s)'
+        }
 
         $('.task-container').append('\
             <div class="task clearfix" data-id="' + data.localId + '" data-color="' + tasksTracker.color + '" data-tracker-id="' + tasksTracker.localId + '">\
                 <div class="main">\
                     <p class="name">' + data.name + '</p>\
-                    <p class="timeleft">3 hours</p>\
+                    <p class="timeleft">' + leftStr + '</p>\
                 </div>\
                 <div class="list">\
                     <ul class="scroll scroll--simple">\

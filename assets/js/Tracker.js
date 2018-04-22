@@ -264,20 +264,35 @@ class Tracker {
         var isRunningDOM = "";
 
         if (todaysTimers != undefined) {
+
             cl('oday days: ', todaysTimers);
+
+            var taskTimes = [];
+
             for (var i = 0; i < todaysTimers.length; i++) {
+
                 if ( (todaysTimers[i].end == null) && (todaysTimers[i].name == undefined) ) {
                     tracker.currentTimer = todaysTimers[i];
                     isRunningDOM = " active ";
                 }
+
                 todaysTimers[i].trackerId = data.localId;
                 tracker.loadedLogObjects.push(todaysTimers[i]);
-                if (todaysTimers[i].name != undefined) {
 
-                    task.render(todaysTimers[i], todaysTimers[i].color);
-
+                if (todaysTimers[i].taskId != undefined) {
+                    taskTimes.push(todaysTimers[i]);
                 }
+
             }
+
+            for (i = 0; i < todaysTimers.length; i++) {
+
+                if (todaysTimers[i].name != undefined) {
+                    task.render(todaysTimers[i], taskTimes);
+                }
+
+            }
+
         }
 
         if (data.deleted) {
