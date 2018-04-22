@@ -138,6 +138,77 @@ function addNote(user, note) {
 
 }
 
+function completeTodo(user, todo) {
+
+    console.log('completeing todo', todo)
+
+    var todo = todo.trim();
+
+    if (todo.length == 0) {
+
+        sendMessageFb(user.facebookId, "Please enter a todo to cross off");
+
+    } else {
+
+        Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+            if (trackers.length == 0) {
+
+                sendMessageFb(user.facebookId, "You have no trackers");
+
+            } else {
+
+                var day = daysFromEpoch();
+
+                for (var i = 0; i < trackers.length; i++) {
+
+                    var tracker = trackers[i];
+
+                    var todayDays = tracker.days[day];
+
+                    if (todayDays == undefined) {
+                        continue;
+                    }
+
+                    var found = false;
+
+                    for (var j = 0; j < todayDays.length; j++) {
+
+                        if (todayDays[j].todos != undefined) {
+
+                            for (var k = 0; k < todayDays[j].todos.length; k++) {
+
+                                if (todayDays[j].todos[k].text == todo) {
+
+                                    found = true;
+                                    todayDays[j].todos[k].completed = true;
+
+                                    tracker.markModified('days');
+
+                                    tracker.save(function(err, tracker) {
+
+                                        sendMessageFb(user.facebookId, "Crossed it off the list");
+
+                                    })
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        })
+
+    }
+
+}
+
 function addTodo(user, text) {
 
     var text = text.trim();
@@ -584,6 +655,7 @@ note {note}                Add a note to the running tracker\u000A\
 trackers                    Get a list of all your trackers\u000A\
 todos                        Get all todos for today\u000A\
 create {name}           Create a new time tracker\u000A\
+done {name}           Marks the todo completed\u000A\
 add task {task} to {tracker} with {mins}      Create a new task for today\u000A\
 add todo {todo} to {task}  Add a todo to a task\u000A\
                                         ';
@@ -621,6 +693,10 @@ add todo {todo} to {task}  Add a todo to a task\u000A\
                                     } else if (text.substr(0, 8) == "add todo") {
 
                                         addTodo(user, text);
+
+                                    } else if (text.substr(0, 4) == "done") {
+
+                                        completeTodo(user, text.substr(4, text.length-1));
 
                                     }
 
