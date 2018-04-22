@@ -27,6 +27,61 @@ function sendMessageFb(sender, text) {
 
 }
 
+function addNote(user, note) {
+
+    Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+        var day = daysFromEpoch();
+
+        for (var i = 0; i < trackers.length; i++) {
+
+            var tracker = trackers[i];
+            var todayDays = tracker.days[day];
+
+            if (todayDays == undefined) {
+                continue
+            }
+
+            var found = false;
+
+            for (var j = 0; j < todayDays.length; j++) {
+
+                if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
+
+                    found = true;
+
+                    var notes = [];
+
+                    if (todayDays[j].notes != undefined) {
+                        notes = todayDays[j].notes;
+                    }
+
+                    notes.push({
+                        timestamp: Date.now(),
+                        description: note
+                    })
+
+                    todayDays[j].notes = notes;
+
+                    tracker.markModified('days');
+                    tracker.save(function(err, tracker) {
+                        sendMessageFb(user.facebookId, "Noted");
+                    })
+
+                }
+
+            }
+
+        }
+
+        if (!found) {
+            sendMessageFb(user.facebookId, "You have to start a tracker before you can add a note to it");
+        }
+
+    })
+
+}
+
 function stopTrackers(user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -224,11 +279,11 @@ module.exports = {
 Here are all the things I can do: \u000A\
 Start a timer - start {Tracker Name}\u000A\
 Stop the currently running timer - stop\u000A\
+Add a note with the current timestamp to the running tracker - note {note}\u000A\
 Get all todos for today- todos\u000A\
 Create a new time tracker - create {Tracker Name}\u000A\
 Create a new task for today - add {Task Name}\u000A\
 Add a todo to a task - add {todo} to {task}\u000A\
-Add a note with the current timestamp to the running tracker - note {note}\u000A\
                                         ';
                                         sendMessageFb(user.facebookId, msg);
                                     } else if (text.substr(0, 5) == "start") {
@@ -239,6 +294,11 @@ Add a note with the current timestamp to the running tracker - note {note}\u000A
                                     } else if (text == "stop") {
 
                                         stopTrackers(user);
+
+                                    } else if (text.substr(0, 4) == "note") {
+
+                                        var note = text.substr(5, text.length-1);
+                                        addNote(user, note);
 
                                     }
 
