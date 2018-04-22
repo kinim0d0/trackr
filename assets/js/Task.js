@@ -43,7 +43,7 @@ class Task {
 
                 $todos += '\
                     <li>\
-                        <label>\
+                        <label data-id="' + todo.localId + '">\
                             <input type="checkbox" ' + $checked + '>\
                             <i></i>\
                             <span>' + todo.text + '</span>\
@@ -94,11 +94,25 @@ class Task {
     }
 
     removeTodo(taskId, localId) {
+
         cl('removing todo', taskId, localId)
+
     }
 
-    toggleTodo(taskId, localId) {
-        cl('toggling todo', taskId, localId)
+    toggleTodo(trackerId, taskId, localId) {
+
+        cl('toggling todo', trackerId, taskId, localId)
+
+        server.api('/tracker/toggleTodo', {
+            trackerId: trackerId,
+            taskId: taskId,
+            todoId: localId,
+            day: utilities.daysFromEpochToDate(timeline.currentDateFrom)
+        }, function(success, data) {
+            cl('todo toggled', success, data);
+            server.init();
+        })
+
     }
 
     /**
@@ -330,7 +344,7 @@ $("html").on("keypress", ".todo-new", function(e){
 $("html").on("change", ".list li input", function(e){
 	cl('test', ($(e.target).is('a')));
 	if ($(e.target).is('a')) return
-    task.toggleTodo( $(this).parent().parent().parent().parent().parent().attr('data-id'), $(this).parent().attr('data-id') );
+    task.toggleTodo( $(this).parent().parent().parent().parent().parent().attr('data-tracker-id'), $(this).parent().parent().parent().parent().parent().attr('data-id'), $(this).parent().attr('data-id') );
 });
 
 var task = new Task();

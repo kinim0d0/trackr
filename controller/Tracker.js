@@ -13,6 +13,76 @@ daysFromEpoch = function() {
 	return days
 }
 
+router.route('/toggleTodo')
+
+    .post(function(req, res) {
+
+        var trackerId = req.body.trackerId;
+        var taskId = req.body.taskId;
+        var todoId = req.body.todoId;
+        var day = req.body.day;
+
+        console.log('--', trackerId, taskId, todoId, day);
+
+        Tracker.findByLocalId({userId: req.session.userId, localId: trackerId}, function(err, trackers) {
+
+            if (err) console.log(err);
+
+            var trackerDay = [];
+
+            var tracker = trackers[0];
+
+            if (typeof tracker.days[day] != 'undefined') {
+                // Creating a day container
+                trackerDay = tracker.days[day];
+            }
+
+            for (var i = 0; i < trackerDay.length; i++) {
+
+                if (trackerDay[i].localId == taskId) {
+
+                    console.log('found the');
+
+                    var todos = trackerDay[i].todos;
+
+                    for (var j = 0; j < todos.length; j++) {
+
+                        if (todos[j].localId == todoId) {
+                            todos[j].completed = !todos[j].completed;
+                            console.log('rewrote');
+                        }
+
+                    }
+
+                    trackerDay[i].todos = todos;
+
+                }
+
+            }
+
+            tracker.days[day] = trackerDay;
+            tracker.markModified('days');
+            //racker.markModified('days.' + day);
+
+            console.log(trackerDay);
+
+            console.log('final: ', tracker);
+
+            tracker.save(req, function(err, data) {
+
+                if (err) console.log('failed to save new timer', err);
+
+            })
+
+            res.send({
+                success: true,
+                data: 'saved timer'
+            });
+
+        })
+
+    })
+
 router.route('/addTodo')
 
     .post(function(req, res) {
@@ -50,7 +120,8 @@ router.route('/addTodo')
 
                     todos.push({
                         text: todo,
-                        completed: false
+                        completed: false,
+                        localId: todoId
                     });
 
                     trackerDay[i].todos = todos;
