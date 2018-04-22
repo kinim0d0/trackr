@@ -82,6 +82,68 @@ function addNote(user, note) {
 
 }
 
+function addTracker(user, trackerName) {
+
+    trackerName = trackerName.trim();
+
+    if (trackerName.length == 0) {
+
+        sendMessageFb(user.facebookId, "Enter a tracker name");
+
+    } else {
+
+        var tracker = {
+            name: trackerName,
+            color: 'red',
+            localId: 'TR' + generateLocalId(),
+            deleted: false,
+            tasks: [],
+            days: {
+                0: null
+            },
+            userId: user._id
+        }
+
+        var newTracker = new Tracker(tracker);
+
+        newTracker.save(function(err) {
+
+            if (err) console.log(err);
+
+            sendMessageFb(user.facebookId, trackerName + " created");
+
+        })
+
+    }
+
+}
+
+function getTrackers(user) {
+
+    Tracker.getAllFromUser(user._id, function(err, trackers) {
+
+        if (trackers.length == 0) {
+
+            sendMessageFb(user.facebookId, "You don't have any trackers yet");
+
+        } else {
+
+            var msg = "";
+
+            for (var i = 0; i < trackers.length; i++) {
+
+                msg += (i + 1) + ": " + trackers[i].name + "\u000A";
+
+            }
+
+            sendMessageFb(user.facebookId, msg);
+
+        }
+
+    })
+
+}
+
 function stopTrackers(user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -280,7 +342,8 @@ Here are all the things I can do: \u000A\
 Start a timer - start {Tracker Name}\u000A\
 Stop the currently running timer - stop\u000A\
 Add a note with the current timestamp to the running tracker - note {note}\u000A\
-Get all todos for today- todos\u000A\
+Get a list of all your trackers - trackers\u000A\
+Get all todos for today - todos\u000A\
 Create a new time tracker - create {Tracker Name}\u000A\
 Create a new task for today - add {Task Name}\u000A\
 Add a todo to a task - add {todo} to {task}\u000A\
@@ -299,6 +362,14 @@ Add a todo to a task - add {todo} to {task}\u000A\
 
                                         var note = text.substr(5, text.length-1);
                                         addNote(user, note);
+
+                                    } else if (text == "trackers") {
+
+                                        getTrackers(user);
+
+                                    } else if (text.substr(0, 6) == "create") {
+
+                                        addTracker(user, text.substr(6, text.length-1));
 
                                     }
 
