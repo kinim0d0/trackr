@@ -70,7 +70,7 @@ class Server {
 
 		 var day = utilities.daysFromEpochToDate(timeline.currentDateFrom);
 		 if (offset != undefined) {
-			 day += offset;
+			 day++;
 		 }
 
 		server.api("/sync/getDay", { day: day  }, function(success, data) {

@@ -413,7 +413,7 @@ function addTracker(req, user, trackerName) {
 
     } else {
 
-        Tracker.getAllFromUser(function(err, trackers) {
+        Tracker.getAllFromUser(user._id, function(err, trackers) {
 
             if (trackers.length != 0) {
 

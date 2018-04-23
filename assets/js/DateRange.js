@@ -166,7 +166,7 @@ $("html").on("click touch", ".back-to-day", function (e) {
 
     timeline.updateTimelineDate(moment())
 
-    server.init();
+    server.init(1);
 
 })
 
