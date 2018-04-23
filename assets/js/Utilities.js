@@ -87,7 +87,9 @@ Utilities.prototype.formatSecondsAsTime = function(seconds) {
 	if (sec < 10) sec = "0" + sec;
 	if (hr) hr = "00";
 
-	return hr + ':' + min + ':' + sec;
+	sec = ""
+
+	return hr + ':' + min + '' + sec;
 
 }
 

@@ -211,6 +211,7 @@ class Tracker {
                 var secondsDiff = utilities.secondsBetweenDates(now, startDate);
                 var timestamp = utilities.formatSecondsAsTime(secondsDiff)
 
+
                 $('.tracker .inner.active').first().find('.time').text(timestamp);
 
                 //cl('timestamp update', timestamp)
@@ -244,7 +245,15 @@ class Tracker {
                     //}
 
                     var secondsDiff = utilities.secondsBetweenDates(now, startDate);
-                    var timestamp = utilities.formatSecondsAsTime(secondsDiff)
+                    cl('-------------', secondsDiff, timestamp, now, startDate);
+
+                    if (secondsDiff < 0) {
+                        secondsDiff = 0;
+                    }
+
+                    var timestamp = utilities.formatSecondsAsTime(secondsDiff);
+
+
 
                     $('.tracker .inner.active').first().find('.time').text(timestamp);
 
@@ -320,7 +329,7 @@ class Tracker {
                 <div class="inner ' + isRunningDOM + '">\
                     <i class="fas tracker-dropdown-toggle fa-ellipsis-h more-dropdown"></i>\
                     <p class="name">' + data.name + '</p>\
-                    <p class="time">00:00:00</p>\
+                    <p class="time">Running</p>\
                 </div>\
             </div>\
         ')
@@ -653,11 +662,12 @@ class Tracker {
 
                 }
 
-                $('.log-container').prepend('\
+                $('.log-container').append('\
                     <div class="log direct" data-border-color="' + logsTracker.color + '">\
                         <i class="fas fa-pencil-alt edit-log"></i>\
                         <p class="title">' + logsTracker.name + '</p>\
                         <span class="time start">' + utilities.getFormattedDate(tracker.loadedLogObjects[i].start, 'HHMM') + '</span>\
+                        <span class="time end">' + utilities.getFormattedDate(tracker.loadedLogObjects[i].end, 'HHMM') + '</span>\
                         ' + notesDOM + '\
                         <div class="form-group clearfix">\
                             <button class="edit-btn save-timer-btn">Save</button>\

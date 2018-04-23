@@ -400,7 +400,7 @@ router.route('/addNewTimer')
             }
 
             trackerDay.push({
-                start: Date.now(),
+                start: Math.round(Date.now()),
                 end: null,
                 localId: timerId,
                 day: day,
@@ -475,7 +475,7 @@ router.route('/addNewTimer')
 
                     if (err) console.log('failed to save new timer', err);
 
-                })
+                });
 
                 res.send({
                     success: true,

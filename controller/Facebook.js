@@ -250,53 +250,57 @@ function addTodo(req, user, text) {
 
             } else {
 
-                var tracker = trackers[0];
+                for (var i = 0; i < trackers.length; i++) {
 
-                var day = daysFromEpoch();
-                var todayDays = tracker.days[day];
+                    var tracker = trackers[i];
 
-                if (todayDays == undefined) {
-                    todayDays = [];
-                }
+                    var day = daysFromEpoch();
+                    var todayDays = tracker.days[day];
 
-                var found = false;
+                    if (todayDays == undefined) {
+                        todayDays = [];
+                    }
 
-                for (var j = 0; j < todayDays.length; j++) {
+                    var found = false;
 
-                    var todos = [];
+                    for (var j = 0; j < todayDays.length; j++) {
 
-                    if (todayDays[j].name == taskName) {
+                        var todos = [];
 
-                        found = true;
+                        if (todayDays[j].name == taskName) {
 
-                        if (todayDays[j].todos != undefined) {
-                            todos = todayDays[j].todos;
+                            found = true;
+
+                            if (todayDays[j].todos != undefined) {
+                                todos = todayDays[j].todos;
+                            }
+
+                            todos.push({
+                                completed: false,
+                                text: todoName
+                            })
+
+                            todayDays[j].todos = todos;
+
+                            tracker.markModified('days');
+
+                            tracker.save(req, function(err, tracker) {
+
+                                sendMessageFb(user.facebookId, "Added todo");
+
+                            })
+
                         }
-
-                        todos.push({
-                            completed: false,
-                            text: todoName
-                        })
-
-                        todayDays[j].todos = todos;
-
-                        tracker.markModified('days');
-
-                        tracker.save(req, function(err, tracker) {
-
-                            sendMessageFb(user.facebookId, "Added todo");
-
-                        })
 
                     }
 
                 }
 
-            }
+                if (!found) {
 
-            if (!found) {
+                    sendMessageFb(user.facebookId, "I couldn't find " + taskName);
 
-                sendMessageFb(user.facebookId, "I couldn't find " + taskName);
+                }
 
             }
 
