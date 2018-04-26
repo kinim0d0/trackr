@@ -126,10 +126,10 @@ function addNote(req, user, note) {
 
             }
 
-        }
+            if (!found) {
+                //sendMessageFb(user.facebookId, "You have to start a tracker before you can add a note to it");
+            }
 
-        if (!found) {
-            sendMessageFb(user.facebookId, "You have to start a tracker before you can add a note to it");
         }
 
     })

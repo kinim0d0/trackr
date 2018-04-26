@@ -31,10 +31,18 @@ userSchema.pre('save', function(next) {
     if (this.isNew) {
 
 		bcrypt.hash(user.password, SALT_WORK_FACTOR, function(err, hash) {
+
 			if (err) return next(err);
 			user.password = hash;
-			user.facebookVerificationID = hash.substr(0, 8);
+			var facebookVerificationID = "";
+
+			for (var i = 0; i < 10; i++) {
+				facebookVerificationID += "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(Math.floor(Math.random() * 62));
+			}
+
+			user.facebookVerificationID = facebookVerificationID;
 			next();
+
 		});
 
 	} else {
