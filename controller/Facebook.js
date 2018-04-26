@@ -1,14 +1,24 @@
 var Tracker = require('../schemas/Tracker');
 
+/**
+ *  Generates a substitute localId for requests from facebook
+ *
+ *  @returns {String}
+ */
 function generateLocalId() {
 	return new Date().getTime().toString();
 }
 
+/**
+ *  Sends a message to a Facebook user
+ *
+ *  @param {Number} sender  facebook id of the recipient
+ *  @param {String} text  message to sent
+ */
 function sendMessageFb(sender, text) {
 
-    //let sender = event.sender.id;
-    //let text = event.message.text;
     const request = require('request');
+
     request({
       url: 'https://graph.facebook.com/v2.6/me/messages',
       qs: {access_token: 'EAAXUxAI0p9wBALjCxKrqtK6sZBFwIfHTVg866qoGiapVDiOZCB6ZAYbY8jhk6dfe3U5wrIKZBOv9Rxow33JCPRZAYZBdgMscQZCQWTyFgRMhOKsWc5H8FXeZBABDH6mioR4xBLlYpP9cAZCksVqFQzOMyHbsjhBZBuwHfPVVQehB0v168PNhYgKAD6'},
@@ -27,7 +37,13 @@ function sendMessageFb(sender, text) {
 
 }
 
-function getTodos(req, user, note) {
+/**
+ *  Sends a message with all the todos for today to a Facebook user
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ */
+function getTodos(req, user) {
 
     var msg = "Here are your todos for today \u000A\u000A"
 
@@ -81,6 +97,13 @@ function getTodos(req, user, note) {
 
 }
 
+/**
+ *  Adds a note with the current timestamp to the currently runnig tracker
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} note  Note to send
+ */
 function addNote(req, user, note) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -136,6 +159,13 @@ function addNote(req, user, note) {
 
 }
 
+/**
+ *  Crosses off all todos for today with a matching name
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} todo  todo to complete
+ */
 function completeTodo(req, user, todo) {
 
     var todo = todo.trim();
@@ -205,6 +235,13 @@ function completeTodo(req, user, todo) {
 
 }
 
+/**
+ *  Adds a todo for today
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} text  text containig the task name to add the todo to
+ */
 function addTodo(req, user, text) {
 
     var text = text.trim();
@@ -311,6 +348,13 @@ function addTodo(req, user, text) {
 
 }
 
+/**
+ *  Adds a task for today
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} text  text contaning the tracker name, task name and the duration of the task
+ */
 function addTask(req, user, text) {
 
     var text = text.trim();
@@ -407,6 +451,13 @@ function addTask(req, user, text) {
 
 }
 
+/**
+ *  Adds a new tracker
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} text  name of the tracker
+ */
 function addTracker(req, user, trackerName) {
 
     trackerName = trackerName.trim();
@@ -460,6 +511,12 @@ function addTracker(req, user, trackerName) {
 
 }
 
+/**
+ *  Sends all the trackers to a user
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ */
 function getTrackers(req, user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -486,6 +543,12 @@ function getTrackers(req, user) {
 
 }
 
+/**
+ *  Stops all trackers
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ */
 function stopTrackers(req, user) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -519,6 +582,13 @@ function stopTrackers(req, user) {
 
 }
 
+/**
+ *  Starts a tracker
+ *
+ *  @param {Object} req  request object to trigger socket.io
+ *  @param {Number} user  Facebook id
+ *  @param {String} user  Tracker Name
+ */
 function startTracker(req, user, trackerName) {
 
     Tracker.getAllFromUser(user._id, function(err, trackers) {
@@ -637,98 +707,16 @@ function startTracker(req, user, trackerName) {
 
     })
 
-    /*Tracker.find({'userId': user._id, 'name': trackerName}, function(err, trackers) {
-
-        if (err) console.log(err);
-
-        if (trackers.length == 0) {
-
-            sendMessageFb(user.facebookId, "I couldn't find this tracker");
-
-        } else {
-
-            var tracker = trackers[0];
-
-            var trackerId = tracker.localId;
-
-            var timerId = "TI" + generateLocalId()
-
-            console.log(trackerId, day, '----')
-
-            Tracker.getAllFromUser(user._id, function(err, trackers) {
-
-                for (var i = 0; i < trackers.length; i++) {
-
-                    var tracker = trackers[i];
-                    var todayDays = tracker.days[day];
-
-                    if (todayDays == undefined) {
-                        continue
-                    }
-
-                    for (var j = 0; j < todayDays.length; j++) {
-                        if ( (todayDays[j].start != undefined) && (todayDays[j].end == null) ) {
-                            todayDays[j].end = Date.now();
-                            tracker.markModified('days');
-                            tracker.save(req, function(err, tracker) {
-                                console.log('stopped timer')
-                            })
-                        }
-                    }
-
-                }
-
-            })
-
-            Tracker.findByLocalId({userId: user._id, localId: trackerId}, function(err, trackers) {
-
-                if (err) console.log(err);
-
-                console.log('trackers: ', trackers);
-
-                var trackerDay = [];
-
-                var tracker = trackers[0];
-
-                if (typeof tracker.days[day] != 'undefined') {
-                    // Creating a day container
-                    trackerDay = tracker.days[day];
-                }
-
-                trackerDay.push({
-                    start: Date.now(),
-                    end: null,
-                    localId: timerId,
-                    day: day,
-                    trackerId: tracker.localId
-                })
-
-                tracker.days[day] = trackerDay;
-                tracker.markModified('days');
-                //racker.markModified('days.' + day);
-
-                console.log(trackerDay);
-
-                console.log('final: ', tracker);
-
-                tracker.save(req, function(err, data) {
-
-                    if (err) console.log('failed to save new timer', err);
-
-                })
-
-                sendMessageFb(user.facebookId, trackerName + " started");
-
-            })
-
-        }
-
-    })*/
-
 }
 
 module.exports = {
 
+    /**
+     *  Handles all incoming requests from Facebook
+     *
+     *  @param {Object} req  request object to trigger socket.io
+     *  @param {Number} res  result
+     */
     handleFbRequest: function(req, res) {
 
         if (req.body.object === 'page') {
@@ -787,6 +775,7 @@ module.exports = {
                                     var user = users[0];
 
                                     var text = message;
+                                    text = text.substr(0, 1).toLowerCase() + text.substr(1, text.length-1);
 
                                     console.log('handling users request', user, text);
 

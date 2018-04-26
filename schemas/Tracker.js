@@ -38,6 +38,7 @@ var trackerSchema = Schema({
 
 });
 
+// Returns a tracker by its local id
 trackerSchema.statics.findByLocalId = function(data, cb) {
 
     var Tracker = require('../schemas/Tracker.js')
@@ -60,6 +61,7 @@ trackerSchema.statics.findByLocalId = function(data, cb) {
 
 }
 
+// Returns the number of days elapsed since the epoch
 trackerSchema.statics.daysFromEpoch = function(dateTo) {
 	dateTo = Date.parse(dateTo)
 	var epocDate = new Date(new Date().getTime() / 1000);
@@ -68,6 +70,7 @@ trackerSchema.statics.daysFromEpoch = function(dateTo) {
 	return days
 }
 
+// Returns all the trackers for a user
 trackerSchema.statics.getAllFromUser = function(userId, cb) {
 
     var Tracker = require('../schemas/Tracker.js')

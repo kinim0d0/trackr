@@ -12,6 +12,7 @@ daysFromEpoch = function() {
 	return days
 }
 
+// Toggles a todo (completed - not completed)
 router.route('/toggleTodo')
 
     .post(function(req, res) {
@@ -82,6 +83,7 @@ router.route('/toggleTodo')
 
     })
 
+// Adds a todo
 router.route('/addTodo')
 
     .post(function(req, res) {
@@ -152,6 +154,7 @@ router.route('/addTodo')
 
     })
 
+// Removes a task
 router.route('/removeTask')
 
     .post(function(req, res) {
@@ -206,6 +209,7 @@ router.route('/removeTask')
 
     })
 
+// Adds a task
 router.route('/addTask')
 
     .post(function(req, res) {
@@ -255,6 +259,7 @@ router.route('/addTask')
 
     })
 
+// Removes a tracker
 router.route('/removeTracker')
 
     .post(function(req, res) {
@@ -282,6 +287,7 @@ router.route('/removeTracker')
 
     })
 
+// Adds a note
 router.route('/addNote')
 
     .post(function(req, res) {
@@ -347,6 +353,7 @@ router.route('/addNote')
 
     })
 
+// Adds a new timer
 router.route('/addNewTimer')
 
     .post(function(req, res) {
@@ -486,7 +493,7 @@ router.route('/addNewTimer')
 
         })
 
-
+// Creates or updates a tracker
 router.route('/edit')
 
     .post(function(req, res) {
@@ -575,6 +582,7 @@ router.route('/edit')
 
     })
 
+    // Creates or edits a timer
     router.route('/editTimer')
 
         .post(function(req, res) {

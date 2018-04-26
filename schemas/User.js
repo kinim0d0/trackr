@@ -53,6 +53,7 @@ userSchema.pre('save', function(next) {
 
 });
 
+// Compares the given password to a hashed password
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
@@ -65,6 +66,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 };
 
+// Returns whether a user exsists or not
 userSchema.statics.isUserExists = function(email, cb) {
 
 	this.find({ email: email }, cb);

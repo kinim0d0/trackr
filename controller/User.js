@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({ extended: true }));
 var User = require('../schemas/User');
 
+// Loggs the user in
 router.route('/login')
 
     .post(function(req, res) {
@@ -148,6 +149,7 @@ router.route('/login')
 
     })
 
+// Loggs the user out
 router.route('/logout')
 
     .get(function(req, res) {
