@@ -164,9 +164,11 @@ $("html").on("click touch", ".back-to-day", function (e) {
 
     e.stopImmediatePropagation();
 
-    timeline.updateTimelineDate(moment())
+    window.location.reload();
 
-    server.init(1);
+    //timeline.updateTimelineDate(moment())
+
+    //server.init(1);
 
 })
 

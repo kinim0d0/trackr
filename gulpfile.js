@@ -19,7 +19,8 @@ gulp.task('scripts', function () {
 				"$": true,
 				"io": true,
 				"moment": true,
-				"Chart": true
+				"Chart": true,
+				"alert": true
 			}
 		}))
 		.pipe(gulp.dest('assets/public/js'));

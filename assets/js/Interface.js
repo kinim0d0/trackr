@@ -47,6 +47,11 @@ $("input").on('keyup', function (e) {
 
 	if ( (e.keyCode == 13) && ($(this).hasClass("add-note")) ) {
 
+		if ( $('.tracker .inner.active').length == 0 ) {
+			alert('You have to start a tracker to add a note to it');
+			return;
+		}
+
 		var note = $(this).val();
 		tracker.addNote(note)
 		$(this).val('');
